@@ -4,30 +4,30 @@
 
 @font-face {
 	font-family: "Josefin Sans";
-	src: url("../../public/fonts/JosefinSans-Regular.ttf") format("truetype");
+	src: url("/public/fonts/JosefinSans-Regular.ttf") format("truetype");
 	font-weight: 400;
 }
 
 @font-face {
 	font-family: "Josefin Sans";
-	src: url("../../public/fonts/JosefinSans-Bold.ttf") format("truetype");
+	src: url("/public/fonts/JosefinSans-Bold.ttf") format("truetype");
 	font-weight: bolder;
 }
 
 @font-face {
 	font-family: "Josefin Sans";
-	src: url("../../public/fonts/JosefinSans-Semibold.ttf") format("truetype");
+	src: url("/public/fonts/JosefinSans-Semibold.ttf") format("truetype");
 	font-weight: bold;
 }
 
 @font-face {
 	font-family: "Josefin Sans";
-	src: url("../../public/fonts/JosefinSans-Light.ttf") format("truetype");
+	src: url("/public/fonts/JosefinSans-Light.ttf") format("truetype");
 	font-weight: 200;
 }
 
 @font-face {
 	font-family: "Josefin Sans";
-	src: url("../../public/fonts/JosefinSans-Thin.ttf") format("truetype");
+	src: url("/public/fonts/JosefinSans-Thin.ttf") format("truetype");
 	font-weight: 100;
 }
