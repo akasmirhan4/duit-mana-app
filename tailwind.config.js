@@ -8,7 +8,7 @@ module.exports = {
 				"radial": "radial-gradient(var(--tw-gradient-stops))",
 			},
       fontFamily:{
-        'sans': ['Josefin Sans', 'sans-serif'],
+        'sans': ['Poppins', 'sans-serif'],
       }
 		},
 	},
