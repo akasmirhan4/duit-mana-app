@@ -14,9 +14,9 @@ const Home: NextPage = () => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<main className="bg-radial from-[#320541] to-[#1B0536] h-screen">
+			<main className="bg-radial from-[#320541] to-[#1B0536] min-h-screen">
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-full absolute pointer-events-none" />
-				<div className="container mx-auto flex flex-col items-center justify-center h-full p-4">
+				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center">
 						<div className="animate-pulse">
 							<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
