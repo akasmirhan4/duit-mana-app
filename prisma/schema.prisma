@@ -12,14 +12,30 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
+enum TransactionCategory {
+    RESTAURANTS
+    TRANSPORT
+    SHOPPING
+    TRANSFERS
+    ENTERTAINMENT
+    GROCERIES
+    SERVICES
+    GENERAL
+    CASH
+    TRAVEL
+    HEALTH
+    INCOME
+    OTHERS
+}
+
 model TransactionLog {
-    id          Int      @id @default(autoincrement())
-    amount      Float    @default(0)
+    id          Int                 @id @default(autoincrement())
+    category    TransactionCategory
+    amount      Float               @default(0)
     description String?
-    createdAt   DateTime @default(now())
-    type        String
     userId      String
-    user        User     @relation(fields: [userId], references: [id])
+    createdAt   DateTime            @default(now())
+    user        User                @relation(fields: [userId], references: [id])
 }
 
 // Necessary for Next auth
