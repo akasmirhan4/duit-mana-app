@@ -2,12 +2,10 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { PlusCircle, User } from "react-feather";
+import { PlusCircle } from "react-feather";
 import { Button, Navbar } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
-import { useState } from "react";
-import { signOut } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);

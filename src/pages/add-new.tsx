@@ -1,10 +1,28 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { ArrowLeft, Send } from "react-feather";
 import { Button, TextInput } from "components/form";
+import { Session } from "next-auth";
+import { getAuthSession } from "server/common/get-server-session";
 
-const AddNew: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+	const session = await getAuthSession(ctx);
+	if (!session) {
+		return {
+			redirect: {
+				destination: "/auth/login",
+				statusCode: 302,
+			},
+		};
+	}
+
+	return {
+		props: { ...session.user },
+	};
+};
+
+const AddNew: NextPage<Session["user"]> = (props) => {
 	return (
 		<>
 			<Head>
