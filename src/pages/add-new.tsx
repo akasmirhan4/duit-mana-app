@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, Send, Zap } from "react-feather";
-import { Button, TextInput } from "../components/form";
+import { ArrowLeft, Send } from "react-feather";
+import { Button, TextInput } from "components/form";
 
 const AddNew: NextPage = () => {
 	return (
