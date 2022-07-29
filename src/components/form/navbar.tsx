@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { LogOut, PieChart, Settings, User } from "react-feather";
 
 function Navbar() {
-	const { data } = useSession();
+	const { data, status } = useSession();
 	const user = data && data.user;
 
 	const menuRef = React.useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ function Navbar() {
 								{user?.image ? (
 									<Image src={user.image} width={32} height={32} className="rounded-full" />
 								) : (
-									<div className="border border-white p-2 rounded-full text-white hover:bg-white hover:text-[#1B0536]">
+									<div className={`${status === "loading" ? "animate-pulse" : ""} border border-white p-2 rounded-full text-white hover:bg-white hover:text-[#1B0536]`}>
 										<User className="w-4 h-4" />
 									</div>
 								)}
