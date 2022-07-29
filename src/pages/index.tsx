@@ -2,9 +2,12 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { PlusCircle, Zap } from "react-feather";
-import { Button } from "components/form";
+import { PlusCircle, User } from "react-feather";
+import { Button, Navbar } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
+import { Session } from "next-auth";
+import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -18,13 +21,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	}
 
 	return {
-		props: {
-			session,
-		},
+		props: { ...session.user },
 	};
 };
 
-const Home: NextPage = () => {
+const Home: NextPage<Session["user"]> = (props) => {
 	return (
 		<>
 			<Head>
@@ -34,6 +35,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<main className="bg-radial from-[#320541] to-[#1B0536] min-h-screen">
+				<Navbar />
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center">
