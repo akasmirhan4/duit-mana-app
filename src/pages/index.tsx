@@ -6,10 +6,14 @@ import { PlusCircle } from "react-feather";
 import { Button, Navbar } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
+import { PrismaClient } from "@prisma/client";
+import { trpc } from "utils/trpc";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
-	if (!session) {
+	const prisma = new PrismaClient();
+
+	if (!session?.user) {
 		return {
 			redirect: {
 				destination: "/auth/login",
@@ -23,7 +27,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	};
 };
 
-const Home: NextPage<Session["user"]> = (props) => {
+type PageProps = {
+	user: Session["user"];
+};
+
+const Home: NextPage<PageProps> = (props) => {
+	const { data, isLoading } = trpc.useQuery(["transaction.list"]);
+
 	return (
 		<>
 			<Head>
@@ -36,13 +46,28 @@ const Home: NextPage<Session["user"]> = (props) => {
 				<Navbar />
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
-					<div className="flex-1 flex flex-col justify-center items-center">
-						<div className="animate-pulse">
-							<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
-						</div>
-						<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
+					<div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
+						{isLoading || !data || data.length <= 0 ? (
+							<>
+								<div className="animate-pulse">
+									<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
+								</div>
+								<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
+							</>
+						) : (
+							<>
+								{data.map((transaction, i) => (
+									<div key={i} className="border border-white text-white w-full mb-2 rounded py-2 px-4 flex justify-between">
+										<div className="flex">
+											<p>{transaction.description}</p>
+										</div>
+										<p>${transaction.amount}</p>
+									</div>
+								))}
+							</>
+						)}
 						<Link href="/add-new" passHref>
-							<Button variant="outlined" startIcon={<PlusCircle className="w-4 h-4" />} label="Add Transaction" />
+							<Button className="w-full mt-4" variant="outlined" startIcon={<PlusCircle className="w-4 h-4" />} label="Add Transaction" />
 						</Link>
 					</div>
 					<h3 className="text-[#E6BBFF] text-center mt-1">Designed by akasmirhan4</h3>

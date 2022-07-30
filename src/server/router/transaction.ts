@@ -18,6 +18,14 @@ export const transactionRouter = createRouter()
 				data: { ...input, userId: ctx.session.user.id },
 			});
 		},
+	}).query("list", {
+		resolve: async ({ ctx }) => {
+			if (!ctx.session?.user?.id) return;
+			return await ctx.prisma.transactionLog.findMany({
+				where: { userId: ctx.session.user.id },
+				orderBy: { createdAt: "desc" },
+			});
+		}
 	})
 	.middleware(async ({ ctx, next }) => {
 		// Any queries or mutations after this middleware will
