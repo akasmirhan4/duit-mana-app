@@ -1,16 +1,12 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
-import { LogIn, Zap } from "react-feather";
+import { LogIn } from "react-feather";
 import { Button } from "components/form";
-import { getAuthSession } from "server/common/get-server-session";
 import { getSession, signIn } from "next-auth/react";
-import Google from "next-auth/providers/google";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getSession(ctx);
-	console.log(session);
 	if (session) {
 		return {
 			redirect: {
