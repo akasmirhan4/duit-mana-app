@@ -32,7 +32,7 @@ type PageProps = {
 };
 
 const Home: NextPage<PageProps> = (props) => {
-	const { data, isLoading } = trpc.useQuery(["transaction.list"]);
+	const { data, status: dataStatus } = trpc.useQuery(["transaction.list"]);
 	const { status } = useSession();
 
 	return (
@@ -48,7 +48,7 @@ const Home: NextPage<PageProps> = (props) => {
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
-						{isLoading || status === "loading" ? (
+						{dataStatus === "loading" || status === "loading" ? (
 							<>
 								<TransactionSkeleton />
 								<TransactionSkeleton />
