@@ -1,9 +1,9 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { LogIn } from "react-feather";
 import { Button } from "components/form";
 import { getSession, signIn } from "next-auth/react";
+import { FiLogIn } from "react-icons/fi";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getSession(ctx);
@@ -41,7 +41,7 @@ const Login: NextPage = () => {
 						</div>
 						<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
 
-						<Button variant="outlined" startIcon={<LogIn className="w-4 h-4" />} label="Login" onClick={() => signIn("google")} />
+						<Button variant="outlined" startIcon={<FiLogIn className="w-4 h-4" />} label="Login" onClick={() => signIn("google")} />
 					</div>
 					<h3 className="text-[#E6BBFF] text-center mt-1">Designed by akasmirhan4</h3>
 				</div>

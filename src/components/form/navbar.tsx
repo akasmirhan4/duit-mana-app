@@ -2,7 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { LogOut, PieChart, Settings, User } from "react-feather";
+import { FiLogOut, FiPieChart, FiSettings, FiUser } from "react-icons/fi";
 
 function Navbar() {
 	const { data, status } = useSession();
@@ -22,17 +22,17 @@ function Navbar() {
 	const menuItems: MenuItem[] = [
 		{
 			label: "Dashboard",
-			icon: <PieChart className="w-4 h-4" />,
+			icon: <FiPieChart className="w-4 h-4" />,
 			href: "/",
 		},
 		{
 			label: "Settings",
-			icon: <Settings className="w-4 h-4" />,
+			icon: <FiSettings className="w-4 h-4" />,
 			href: "/settings",
 		},
 		{
 			label: "Sign out",
-			icon: <LogOut className="w-4 h-4" />,
+			icon: <FiLogOut className="w-4 h-4" />,
 			onClick: signOut,
 		},
 	];
@@ -73,7 +73,7 @@ function Navbar() {
 									<Image src={user.image} width={32} height={32} className="rounded-full" />
 								) : (
 									<div className={`${status === "loading" ? "animate-pulse" : ""} border border-white p-2 rounded-full text-white hover:bg-white hover:text-[#1B0536]`}>
-										<User className="w-4 h-4" />
+										<FiUser className="w-4 h-4" />
 									</div>
 								)}
 							</button>

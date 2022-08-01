@@ -1,7 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { ArrowLeft, Send } from "react-feather";
 import { Button, TextInput } from "components/form";
 import { Session } from "next-auth";
 import { getAuthSession } from "server/common/get-server-session";
@@ -10,6 +9,7 @@ import { TransactionCategory } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { string } from "zod";
 import { useRouter } from "next/router";
+import { FiArrowLeft, FiSend } from "react-icons/fi";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -60,7 +60,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="w-full max-w-xs">
 						<Link passHref href="/">
-							<Button variant="text" label="Back" startIcon={<ArrowLeft className="w-4 h-4" />} className="mb-4" />
+							<Button variant="text" label="Back" startIcon={<FiArrowLeft className="w-4 h-4" />} className="mb-4" />
 						</Link>
 						<div className="border border-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 							<label className="block text-white text-sm font-bold mb-2">Category</label>
@@ -96,7 +96,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 							<Button
 								variant="outlined"
 								label="Send"
-								endIcon={<Send className="w-4 h-4" />}
+								endIcon={<FiSend className="w-4 h-4" />}
 								onClick={() =>
 									addNewTransaction.mutate({
 										amount: amount || 0,

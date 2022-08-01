@@ -2,12 +2,13 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { PlusCircle } from "react-feather";
 import { Button, Navbar } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 import { trpc } from "utils/trpc";
+import { TransactionContainer } from "components";
+import { FiPlusCircle } from "react-icons/fi";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -57,17 +58,12 @@ const Home: NextPage<PageProps> = (props) => {
 						) : (
 							<>
 								{data.map((transaction, i) => (
-									<div key={i} className="border border-white text-white w-full mb-2 rounded py-2 px-4 flex justify-between">
-										<div className="flex">
-											<p>{transaction.description}</p>
-										</div>
-										<p>${transaction.amount}</p>
-									</div>
+									<TransactionContainer key={i} transaction={transaction} />
 								))}
 							</>
 						)}
 						<Link href="/add-new" passHref>
-							<Button className="w-full mt-4" variant="outlined" startIcon={<PlusCircle className="w-4 h-4" />} label="Add Transaction" />
+							<Button className="w-full mt-4" variant="outlined" startIcon={<FiPlusCircle className="w-4 h-4" />} label="Add Transaction" />
 						</Link>
 					</div>
 					<h3 className="text-[#E6BBFF] text-center mt-1">Designed by akasmirhan4</h3>
