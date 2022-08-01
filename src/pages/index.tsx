@@ -7,12 +7,11 @@ import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 import { trpc } from "utils/trpc";
-import { TransactionContainer } from "components";
+import { TransactionContainer, TransactionSkeleton } from "components";
 import { FiPlusCircle } from "react-icons/fi";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
-	const prisma = new PrismaClient();
 
 	if (!session?.user) {
 		return {
@@ -48,7 +47,13 @@ const Home: NextPage<PageProps> = (props) => {
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
-						{isLoading || !data || data.length <= 0 ? (
+						{isLoading ? (
+							<>
+								<TransactionSkeleton />
+								<TransactionSkeleton />
+								<TransactionSkeleton />
+							</>
+						) : !data || data.length <= 0 ? (
 							<>
 								<div className="animate-pulse">
 									<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
