@@ -7,8 +7,8 @@ import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 import { trpc } from "utils/trpc";
-import { TransactionContainer, TransactionSkeleton } from "components";
-import { FiPlusCircle } from "react-icons/fi";
+import { IconButton, TransactionContainer, TransactionSkeleton } from "components";
+import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";
 import { useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -73,7 +73,21 @@ const Home: NextPage<PageProps> = (props) => {
 							<Button className="w-full mt-4" variant="outlined" startIcon={<FiPlusCircle className="w-4 h-4" />} label="Add Transaction" />
 						</Link>
 					</div>
-					<h3 className="text-[#E6BBFF] text-center mt-1">Designed by akasmirhan4</h3>
+					<div className="flex flex-col justify-center items-center">
+						<div className="flex mb-1 justify-center w-full">
+							<a href="https://github.com/akasmirhan4/duit-mana-app" target="_blank" rel="noopener noreferrer">
+								<IconButton variant="outlined" className="mx-1">
+									<FiGithub />
+								</IconButton>
+							</a>
+							<a href="https://www.instagram.com/akasmirhan/" target="_blank" rel="noopener noreferrer">
+								<IconButton variant="outlined" className="mx-1">
+									<FiInstagram />
+								</IconButton>
+							</a>
+						</div>
+						<h3 className="text-[#E6BBFF] text-center mt-1">Designed by akasmirhan4</h3>
+					</div>
 				</div>
 			</main>
 		</>
