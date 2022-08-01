@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { string } from "zod";
 import { useRouter } from "next/router";
 import { FiArrowLeft, FiSend } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -97,13 +98,20 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								variant="outlined"
 								label="Send"
 								endIcon={<FiSend className="w-4 h-4" />}
-								onClick={() =>
-									addNewTransaction.mutate({
-										amount: amount || 0,
-										category,
-										description,
-									})
-								}
+								onClick={() => {
+									toast.promise(
+										addNewTransaction.mutateAsync({
+											amount: amount || 0,
+											category,
+											description,
+										}),
+										{
+											loading: "Adding...",
+											success: "Transaction added!",
+											error: "Error adding transaction!",
+										}
+									);
+								}}
 								disabled={addNewTransaction.isLoading}
 							/>
 							{/* error message */}

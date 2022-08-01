@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button, Navbar } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
-import { PrismaClient } from "@prisma/client";
 import { trpc } from "utils/trpc";
 import { IconButton, TransactionContainer, TransactionSkeleton } from "components";
 import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";

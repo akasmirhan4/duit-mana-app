@@ -12,9 +12,9 @@ export const transactionRouter = createRouter()
 				description: z.string(),
 			})
 			.nullish(),
-		async resolve({ ctx, input }) {
+		resolve({ ctx, input }) {
 			if (!input || !ctx.session?.user?.id) return;
-			return await ctx.prisma.transactionLog.create({
+			return ctx.prisma.transactionLog.create({
 				data: { ...input, userId: ctx.session.user.id },
 			});
 		},

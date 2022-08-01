@@ -13,7 +13,7 @@ function defineNextConfig(config) {
 }
 
 export default defineNextConfig({
-  reactStrictMode: true,
+  reactStrictMode: false,
   images:{
     domains: ["lh3.googleusercontent.com"]
   }
