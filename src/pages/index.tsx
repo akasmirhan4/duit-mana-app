@@ -9,6 +9,7 @@ import { PrismaClient } from "@prisma/client";
 import { trpc } from "utils/trpc";
 import { TransactionContainer, TransactionSkeleton } from "components";
 import { FiPlusCircle } from "react-icons/fi";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -33,6 +34,7 @@ type PageProps = {
 
 const Home: NextPage<PageProps> = (props) => {
 	const { data, isLoading } = trpc.useQuery(["transaction.list"]);
+	const { status } = useSession();
 
 	return (
 		<>
@@ -47,7 +49,7 @@ const Home: NextPage<PageProps> = (props) => {
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
-						{isLoading ? (
+						{isLoading || status === "loading" ? (
 							<>
 								<TransactionSkeleton />
 								<TransactionSkeleton />
