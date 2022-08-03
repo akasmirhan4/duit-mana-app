@@ -8,7 +8,7 @@ import { trpc } from "utils/trpc";
 import { PrismaClient, TransactionCategory, TransactionLog } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FiArrowLeft, FiChevronDown, FiChevronUp, FiSend } from "react-icons/fi";
+import { FiArrowLeft, FiChevronDown, FiChevronUp, FiRefreshCw, FiSend, FiX } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { DayPicker } from "react-day-picker";
 import { Dismissable } from "components";
@@ -104,7 +104,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="w-full max-w-xs">
 						<Link passHref href="/">
-							<Button variant="text" label="Back" startIcon={<FiArrowLeft className="w-4 h-4" />} className="mb-4" />
+							<Button variant="text" label="Cancel" startIcon={<FiX className="w-4 h-4" />} className="mb-4" />
 						</Link>
 						<div className="flex flex-col border border-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 							<label className="block text-white text-sm font-bold mb-2">Category</label>
@@ -175,8 +175,8 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 							<div className="flex justify-between">
 								<Button
 									variant="outlined"
-									label="Send"
-									endIcon={<FiSend className="w-4 h-4" />}
+									label="Update"
+									endIcon={<FiRefreshCw className="w-4 h-4" />}
 									onClick={() => {
 										transaction?.id && toast.promise(
 											updateTransaction.mutateAsync({
