@@ -10,7 +10,7 @@ const Modal: FC<Props> = ({ children, open, onClose, containerProps, ...props })
 	return (
 		<div
 			{...containerProps}
-			className={`${open ? "visible" : "invisible"} absolute z-50 bg-black bg-opacity-90 flex items-center justify-center w-screen h-screen`}
+			className={`${open ? "visible opacity-100" : "invisible opacity-0"} absolute z-50 bg-black bg-opacity-90 flex items-center justify-center w-screen h-screen duration-200 ease-in-out`}
 			onClick={() => {
 				onClose && onClose();
 			}}
