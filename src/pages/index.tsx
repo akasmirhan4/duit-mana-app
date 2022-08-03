@@ -9,7 +9,8 @@ import { trpc } from "utils/trpc";
 import { IconButton, TransactionContainer, TransactionSkeleton } from "components";
 import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { TransactionLog } from "@prisma/client";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -33,9 +34,22 @@ type PageProps = {
 };
 
 const Home: NextPage<PageProps> = (props) => {
-	const { data, status: dataStatus, refetch } = trpc.useQuery(["transaction.list"]);
+	const { data: transactions, status: dataStatus, refetch } = trpc.useQuery(["transaction.list"]);
 	const { status } = useSession();
 	const [selectedTransactionID, setSelectedTransactionID] = useState<number | null>(null);
+
+	const getTransactionGroupedByDate = useCallback(
+		() =>
+			transactions?.reduce((acc, transaction) => {
+				const date = transaction.date ?? new Date();
+				const dateString = new Intl.DateTimeFormat("en-SG", {
+					dateStyle: "medium",
+				}).format(date);
+				acc.set(dateString, [...(acc.get(dateString) ?? []), transaction]);
+				return acc;
+			}, new Map<string, TransactionLog[]>()),
+		[transactions]
+	);
 
 	return (
 		<>
@@ -56,7 +70,7 @@ const Home: NextPage<PageProps> = (props) => {
 								<TransactionSkeleton />
 								<TransactionSkeleton />
 							</>
-						) : !data || data.length <= 0 ? (
+						) : !transactions || transactions.length <= 0 ? (
 							<>
 								<div className="animate-pulse">
 									<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
@@ -65,24 +79,33 @@ const Home: NextPage<PageProps> = (props) => {
 							</>
 						) : (
 							<>
-								{data.map((transaction, i) => (
-									<TransactionContainer
-										key={i}
-										transaction={transaction}
-										refetch={refetch}
-										onSelect={() => {
-											if (transaction.id === selectedTransactionID) {
-												setSelectedTransactionID(null);
-											} else {
-												setSelectedTransactionID(transaction.id);
-											}
-										}}
-										onDismiss={() => {
-											setSelectedTransactionID(null);
-										}}
-										selected={transaction.id === selectedTransactionID}
-									/>
-								))}
+								{Array.from(getTransactionGroupedByDate() ?? []).map(([date, transactions]) => {
+									return (
+										<div key={date} className="flex flex-col justify-center w-full">
+											<h2 className="text-2xl font-semibold text-white text-left pb-4 pt-2">{date}</h2>
+											<div className="flex flex-col items-center justify-center w-full">
+												{transactions.map((transaction, i) => (
+													<TransactionContainer
+														key={i}
+														transaction={transaction}
+														refetch={refetch}
+														onSelect={() => {
+															if (transaction.id === selectedTransactionID) {
+																setSelectedTransactionID(null);
+															} else {
+																setSelectedTransactionID(transaction.id);
+															}
+														}}
+														onDismiss={() => {
+															setSelectedTransactionID(null);
+														}}
+														selected={transaction.id === selectedTransactionID}
+													/>
+												))}
+											</div>
+										</div>
+									);
+								})}
 							</>
 						)}
 						<Link href="/add-new" passHref>
