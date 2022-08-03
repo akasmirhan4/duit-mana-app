@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { Button, TextInput } from "components/form";
+import { CustomButton, CustomTextInput } from "components/form";
 import { Session } from "next-auth";
 import { getAuthSession } from "server/common/get-server-session";
 import { trpc } from "utils/trpc";
@@ -104,7 +104,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="w-full max-w-xs">
 						<Link passHref href="/">
-							<Button variant="text" label="Cancel" startIcon={<FiX className="w-4 h-4" />} className="mb-4" />
+							<CustomButton variant="text" label="Cancel" startIcon={<FiX className="w-4 h-4" />} className="mb-4" />
 						</Link>
 						<div className="flex flex-col border border-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 							<label className="block text-white text-sm font-bold mb-2">Category</label>
@@ -122,7 +122,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 								))}
 							</select>
 
-							<TextInput
+							<CustomTextInput
 								label="Amount (BND)"
 								value={String(amount)}
 								onChange={(e) => {
@@ -137,13 +137,13 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 								startAdornment="$"
 								variant="outlined"
 							/>
-							<TextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
+							<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
 
 							{/* SHOW MORE */}
 
 							{showMore && (
 								<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
-									<TextInput
+									<CustomTextInput
 										value={date?.toLocaleDateString()}
 										onClick={() => {
 											setShowDateModal(true);
@@ -173,29 +173,30 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 								</Dismissable>
 							)}
 							<div className="flex justify-between">
-								<Button
+								<CustomButton
 									variant="outlined"
 									label="Update"
 									endIcon={<FiRefreshCw className="w-4 h-4" />}
 									onClick={() => {
-										transaction?.id && toast.promise(
-											updateTransaction.mutateAsync({
-												id: transaction.id,
-												amount: amount ?? 0,
-												category,
-												description,
-												date: date ?? new Date(),
-											}),
-											{
-												loading: "Updating...",
-												success: "Transaction updated!",
-												error: "Error updating transaction!",
-											}
-										);
+										transaction?.id &&
+											toast.promise(
+												updateTransaction.mutateAsync({
+													id: transaction.id,
+													amount: amount ?? 0,
+													category,
+													description,
+													date: date ?? new Date(),
+												}),
+												{
+													loading: "Updating...",
+													success: "Transaction updated!",
+													error: "Error updating transaction!",
+												}
+											);
 									}}
 									disabled={updateTransaction.isLoading}
 								/>
-								<Button
+								<CustomButton
 									label={showMore ? "Simple" : "Details"}
 									onClick={() => setShowMore(!showMore)}
 									variant="text"

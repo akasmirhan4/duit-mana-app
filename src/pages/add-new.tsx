@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { Button, TextInput } from "components/form";
+import { CustomButton, CustomTextInput } from "components/form";
 import { Session } from "next-auth";
 import { getAuthSession } from "server/common/get-server-session";
 import { trpc } from "utils/trpc";
@@ -65,7 +65,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="w-full max-w-xs">
 						<Link passHref href="/">
-							<Button variant="text" label="Back" startIcon={<FiArrowLeft className="w-4 h-4" />} className="mb-4" />
+							<CustomButton variant="text" label="Back" startIcon={<FiArrowLeft className="w-4 h-4" />} className="mb-4" />
 						</Link>
 						<div className="flex flex-col border border-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 							<label className="block text-white text-sm font-bold mb-2">Category</label>
@@ -83,7 +83,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								))}
 							</select>
 
-							<TextInput
+							<CustomTextInput
 								label="Amount (BND)"
 								value={String(amount)}
 								onChange={(e) => {
@@ -98,13 +98,13 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								startAdornment="$"
 								variant="outlined"
 							/>
-							<TextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
+							<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
 
 							{/* SHOW MORE */}
 
 							{showMore && (
 								<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
-									<TextInput
+									<CustomTextInput
 										value={date?.toLocaleDateString()}
 										onClick={() => {
 											setShowDateModal(true);
@@ -134,7 +134,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								</Dismissable>
 							)}
 							<div className="flex justify-between">
-								<Button
+								<CustomButton
 									variant="outlined"
 									label="Send"
 									endIcon={<FiSend className="w-4 h-4" />}
@@ -155,7 +155,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 									}}
 									disabled={addNewTransaction.isLoading}
 								/>
-								<Button
+								<CustomButton
 									label={showMore ? "Simple" : "Details"}
 									onClick={() => setShowMore(!showMore)}
 									variant="text"
