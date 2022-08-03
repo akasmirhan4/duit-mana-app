@@ -68,7 +68,7 @@ export const transactionRouter = createRouter()
 			if (!ctx.session?.user?.id) return;
 			return await ctx.prisma.transactionLog.findMany({
 				where: { userId: ctx.session.user.id },
-				orderBy: { createdAt: "desc" },
+				orderBy: { date: "desc" },
 			});
 		},
 	})

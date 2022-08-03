@@ -11,6 +11,7 @@ import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";
 import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 import { TransactionLog } from "@prisma/client";
+import ScrollableContainer from "components/ScrollableContainer";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -78,7 +79,7 @@ const Home: NextPage<PageProps> = (props) => {
 								<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
 							</>
 						) : (
-							<>
+							<ScrollableContainer className="flex flex-col w-full max-w-md h-[50vh]">
 								{Array.from(getTransactionGroupedByDate() ?? []).map(([date, transactions]) => {
 									return (
 										<div key={date} className="flex flex-col justify-center w-full">
@@ -106,7 +107,7 @@ const Home: NextPage<PageProps> = (props) => {
 										</div>
 									);
 								})}
-							</>
+							</ScrollableContainer>
 						)}
 						<Link href="/add-new" passHref>
 							<Button className="w-full mt-4" variant="outlined" startIcon={<FiPlusCircle className="w-4 h-4" />} label="Add Transaction" />

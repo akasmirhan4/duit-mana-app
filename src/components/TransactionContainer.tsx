@@ -16,9 +16,9 @@ type Props = {
 	onSelect?: () => void;
 	selected?: boolean;
 	onDismiss?: () => void;
-};
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selected, onDismiss }) => {
+const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selected, onDismiss, ...props }) => {
 	let icon;
 
 	const deleteTransaction = trpc.useMutation(["transaction.delete"]);
@@ -68,7 +68,7 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 	}
 
 	return (
-		<div className="flex flex-col items-center w-full">
+		<div {...props} className={`${props.className} flex flex-col items-center w-full`}>
 			<div className="flex items-center w-full mb-2 relative">
 				<Dismissable
 					onSelect={onSelect}
