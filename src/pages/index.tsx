@@ -14,6 +14,7 @@ import { TransactionLog } from "@prisma/client";
 import ScrollableContainer from "components/ScrollableContainer";
 import AddNewForm from "components/form/AddNewForm";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import EditForm from "components/form/EditForm";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -39,8 +40,9 @@ type PageProps = {
 const Home: NextPage<PageProps> = (props) => {
 	const { data: transactions, status: dataStatus, refetch } = trpc.useQuery(["transaction.list"]);
 	const { status } = useSession();
-	const [selectedTransactionID, setSelectedTransactionID] = useState<number | null>(null);
 	const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
+	const [openEditTransactionModal, setOpenEditTransactionModal] = useState(false);
+	const [selectedTransaction, setSelectedTransaction] = useState<TransactionLog | null>(null);
 	const [parent] = useAutoAnimate<HTMLDivElement>();
 
 	const getTransactionGroupedByDate = useCallback(
@@ -65,6 +67,16 @@ const Home: NextPage<PageProps> = (props) => {
 			</Head>
 
 			<main className="bg-radial from-primary to-secondary min-h-screen">
+				<Modal open={openEditTransactionModal} onClose={() => setOpenEditTransactionModal(false)}>
+					<EditForm
+						className="bg-secondary bg-opacity-75 border-white border shadow-md"
+						onSubmit={() => {
+							refetch();
+							setOpenEditTransactionModal(false);
+						}}
+						transaction={selectedTransaction}
+					/>
+				</Modal>
 				<Modal open={openAddTransactionModal} onClose={() => setOpenAddTransactionModal(false)}>
 					<AddNewForm
 						className="bg-secondary bg-opacity-75 border-white border shadow-md"
@@ -104,16 +116,20 @@ const Home: NextPage<PageProps> = (props) => {
 														transaction={transaction}
 														refetch={refetch}
 														onSelect={() => {
-															if (transaction.id === selectedTransactionID) {
-																setSelectedTransactionID(null);
+															if (transaction.id === selectedTransaction?.id) {
+																setSelectedTransaction(null);
 															} else {
-																setSelectedTransactionID(transaction.id);
+																setSelectedTransaction(transaction);
 															}
 														}}
 														onDismiss={() => {
-															setSelectedTransactionID(null);
+															setSelectedTransaction(null);
 														}}
-														selected={transaction.id === selectedTransactionID}
+														onEditClicked={(transaction) => {
+															setSelectedTransaction(transaction);
+															setOpenEditTransactionModal(true);
+														}}
+														selected={transaction.id === selectedTransaction?.id}
 													/>
 												))}
 											</div>

@@ -9,17 +9,18 @@ import { trpc } from "utils/trpc";
 import toast from "react-hot-toast";
 import Dismissable from "./Dismissable";
 import Link from "next/link";
-import autoAnimate from '@formkit/auto-animate'
+import autoAnimate from "@formkit/auto-animate";
 
 type Props = {
 	transaction: TransactionLog;
 	refetch: () => void;
 	onSelect?: () => void;
+	onEditClicked?: (transaction: TransactionLog) => void;
 	selected?: boolean;
 	onDismiss?: () => void;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selected, onDismiss, ...props }) => {
+const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, onEditClicked, selected, onDismiss, ...props }) => {
 	let icon;
 
 	const deleteTransaction = trpc.useMutation(["transaction.delete"]);
@@ -95,19 +96,16 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 			{selected && (
 				<div className={`items-center`}>
 					<div className={`flex right-0 top-full rounded mb-2`}>
-						<Link
-							href={{
-								pathname: "/edit",
-								query: {
-									id: transaction.id,
-								},
+						<IconButton
+							variant="text"
+							className={`h-full ml-2`}
+							onClick={(e) => {
+								e.stopPropagation();
+								onEditClicked && onEditClicked(transaction);
 							}}
-							passHref
 						>
-							<IconButton variant="text" className={`h-full ml-2`}>
-								<FiEdit className="w-4 h-4" />
-							</IconButton>
-						</Link>
+							<FiEdit className="w-4 h-4" />
+						</IconButton>
 						<IconButton
 							variant="text"
 							className={`h-full ml-2`}
