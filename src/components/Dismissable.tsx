@@ -5,15 +5,15 @@ type Props = {
 	onSelect?: () => void;
 	onDismiss?: () => void;
 	selected?: boolean;
-} & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 const Dismissable: FC<Props> = ({ children, onSelect, onDismiss, selected, ...props }) => {
-	const transactionRef = React.useRef<HTMLButtonElement>(null);
+	const dismissableRef = React.useRef<HTMLDivElement>(null);
 	const [clickedOutside, setClickedOutside] = React.useState(false);
 
 	const handleOutsideClick = (e: MouseEvent) => {
-		if (transactionRef.current) {
-			setClickedOutside(!transactionRef.current.contains(e.target as Node));
+		if (dismissableRef.current) {
+			setClickedOutside(!dismissableRef.current.contains(e.target as Node));
 		}
 	};
 
@@ -31,9 +31,16 @@ const Dismissable: FC<Props> = ({ children, onSelect, onDismiss, selected, ...pr
 	}, [clickedOutside]);
 
 	return (
-		<button ref={transactionRef} onClick={onSelect} {...props}>
+		<div
+			{...props}
+			ref={dismissableRef}
+			className={`${props.className} cursor-pointer`}
+			onClick={() => {
+				onSelect && onSelect();
+			}}
+		>
 			{children}
-		</button>
+		</div>
 	);
 };
 

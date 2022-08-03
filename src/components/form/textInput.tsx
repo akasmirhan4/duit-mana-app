@@ -32,11 +32,11 @@ const TextInput: FC<Props> = ({ label, error, startAdornment, variant = "contain
 					<p>{startAdornment}</p>
 				</div>
 				<input
-					className={`shadow appearance-none rounded w-full ${
+					{...props}
+					className={`${props.className} shadow appearance-none rounded w-full ${
 						!!startAdornment ? "pl-6" : "pl-3"
 					} py-2 pr-3 leading-tight focus:outline-none focus:shadow-outline text-sm ${variantStyle} ${!!error && "border-red-500"}`}
 					id={label}
-					{...props}
 				/>
 			</div>
 			{!!error && <p className="text-red-500 text-xs italic mt-2">{error}</p>}

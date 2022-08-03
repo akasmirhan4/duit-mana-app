@@ -7,10 +7,11 @@ import { getAuthSession } from "server/common/get-server-session";
 import { trpc } from "utils/trpc";
 import { TransactionCategory } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { string } from "zod";
 import { useRouter } from "next/router";
-import { FiArrowLeft, FiSend } from "react-icons/fi";
+import { FiArrowLeft, FiChevronDown, FiChevronUp, FiSend } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { DayPicker } from "react-day-picker";
+import { Dismissable } from "components";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -32,6 +33,9 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 	const [category, setCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
 	const [amount, setAmount] = useState<number | null>();
 	const [description, setDescription] = useState("");
+	const [showDateModal, setShowDateModal] = useState(false);
+	const [date, setDate] = useState<Date>(new Date());
+	const [showMore, setShowMore] = useState(false);
 
 	const addNewTransaction = trpc.useMutation(["transaction.add"]);
 
@@ -63,7 +67,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 						<Link passHref href="/">
 							<Button variant="text" label="Back" startIcon={<FiArrowLeft className="w-4 h-4" />} className="mb-4" />
 						</Link>
-						<div className="border border-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+						<div className="flex flex-col border border-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 							<label className="block text-white text-sm font-bold mb-2">Category</label>
 							<select
 								className="bg-transparent outline-none appearance-none w-full border text-white border-white text-sm px-4 py-2 rounded mb-4"
@@ -78,6 +82,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 									</option>
 								))}
 							</select>
+
 							<TextInput
 								label="Amount (BND)"
 								value={String(amount)}
@@ -94,26 +99,68 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								variant="outlined"
 							/>
 							<TextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
-							<Button
-								variant="outlined"
-								label="Send"
-								endIcon={<FiSend className="w-4 h-4" />}
-								onClick={() => {
-									toast.promise(
-										addNewTransaction.mutateAsync({
-											amount: amount || 0,
-											category,
-											description,
-										}),
-										{
-											loading: "Adding...",
-											success: "Transaction added!",
-											error: "Error adding transaction!",
-										}
-									);
-								}}
-								disabled={addNewTransaction.isLoading}
-							/>
+
+							{/* SHOW MORE */}
+
+							{showMore && (
+								<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
+									<TextInput
+										value={date?.toLocaleDateString()}
+										onClick={() => {
+											setShowDateModal(true);
+										}}
+										readOnly
+										label="Date"
+										type="text"
+										variant="outlined"
+										className="cursor-pointer"
+									/>
+									<div
+										className={`${
+											showDateModal ? "visible" : "invisible"
+										} flex justify-center items-center absolute mb-2 left-0 right-0 bottom-full duration-100 ease-in-out`}
+									>
+										<DayPicker
+											className="bg-[#331536] border border-white text-white rounded px-6 pt-4 pb-8"
+											mode="single"
+											selected={date}
+											onSelect={(date) => {
+												setShowDateModal(false);
+												if (date) setDate(date);
+											}}
+											showOutsideDays
+										/>
+									</div>
+								</Dismissable>
+							)}
+							<div className="flex justify-between">
+								<Button
+									variant="outlined"
+									label="Send"
+									endIcon={<FiSend className="w-4 h-4" />}
+									onClick={() => {
+										toast.promise(
+											addNewTransaction.mutateAsync({
+												amount: amount || 0,
+												category,
+												description,
+											}),
+											{
+												loading: "Adding...",
+												success: "Transaction added!",
+												error: "Error adding transaction!",
+											}
+										);
+									}}
+									disabled={addNewTransaction.isLoading}
+								/>
+								<Button
+									label={showMore ? "Simple" : "Details"}
+									onClick={() => setShowMore(!showMore)}
+									variant="text"
+									endIcon={showMore ? <FiChevronUp className="w-4 h-4" /> : <FiChevronDown className="w-4 h-4" />}
+								/>
+							</div>
 							{/* error message */}
 							{addNewTransaction.error && <div className="text-red-500 text-sm italic">{addNewTransaction.error.message}</div>}
 						</div>
