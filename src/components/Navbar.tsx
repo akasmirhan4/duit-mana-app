@@ -45,14 +45,8 @@ function Navbar() {
 			<div className="md:container mx-auto px-6 py-4">
 				<div className="flex items-center justify-end">
 					<div className="flex flex-col flex-end w-full">
-						<div className="self-end">
-							<Dismissable
-								className="hover:brightness-150"
-								onDismiss={() => setExpandMenu(false)}
-								onSelect={() => setExpandMenu(true)}
-								selected={expandMenu}
-								ref={parent}
-							>
+						<div className="self-end relative" ref={parent}>
+							<Dismissable className="hover:brightness-150" onDismiss={() => setExpandMenu(false)} onSelect={() => setExpandMenu(true)} selected={expandMenu}>
 								{user?.image ? (
 									<Image src={user.image} width={32} height={32} className="rounded-full" />
 								) : (
