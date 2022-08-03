@@ -9,10 +9,11 @@ import { trpc } from "utils/trpc";
 import { IconButton, Modal, Navbar, TransactionContainer, TransactionSkeleton } from "components";
 import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";
 import { useSession } from "next-auth/react";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { TransactionLog } from "@prisma/client";
 import ScrollableContainer from "components/ScrollableContainer";
 import AddNewForm from "components/form/AddNewForm";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -40,6 +41,7 @@ const Home: NextPage<PageProps> = (props) => {
 	const { status } = useSession();
 	const [selectedTransactionID, setSelectedTransactionID] = useState<number | null>(null);
 	const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
+	const [parent] = useAutoAnimate<HTMLDivElement>();
 
 	const getTransactionGroupedByDate = useCallback(
 		() =>
@@ -90,12 +92,12 @@ const Home: NextPage<PageProps> = (props) => {
 								<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
 							</>
 						) : (
-							<ScrollableContainer className="flex flex-col w-full max-w-md h-[50vh]">
+							<ScrollableContainer className="flex flex-col w-full max-w-md h-[50vh]" ref={parent}>
 								{Array.from(getTransactionGroupedByDate() ?? []).map(([date, transactions]) => {
 									return (
 										<div key={date} className="flex flex-col justify-center w-full">
 											<h2 className="text-2xl font-semibold text-white text-left pb-4 pt-2">{date}</h2>
-											<div className="flex flex-col items-center justify-center w-full">
+											<div className="flex flex-col items-center justify-center w-full" ref={parent}>
 												{transactions.map((transaction, i) => (
 													<TransactionContainer
 														key={i}

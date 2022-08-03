@@ -1,5 +1,5 @@
 import { TransactionLog } from "@prisma/client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { FiEdit, FiHeart, FiPlus, FiPlusSquare, FiShoppingBag, FiShoppingCart, FiTool, FiTrash } from "react-icons/fi";
 import { IoAirplaneOutline, IoBugOutline, IoCarOutline, IoCashOutline, IoGameControllerOutline, IoRestaurantOutline } from "react-icons/io5";
 import { AiOutlineSwap } from "react-icons/ai";
@@ -9,6 +9,7 @@ import { trpc } from "utils/trpc";
 import toast from "react-hot-toast";
 import Dismissable from "./Dismissable";
 import Link from "next/link";
+import autoAnimate from '@formkit/auto-animate'
 
 type Props = {
 	transaction: TransactionLog;
@@ -22,6 +23,12 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 	let icon;
 
 	const deleteTransaction = trpc.useMutation(["transaction.delete"]);
+
+	const parent = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		parent.current && autoAnimate(parent.current);
+	}, [parent]);
 
 	switch (transaction.category) {
 		case "RESTAURANTS":
@@ -68,7 +75,7 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 	}
 
 	return (
-		<div {...props} className={`${props.className} flex flex-col items-center w-full`}>
+		<div {...props} className={`${props.className} flex flex-col items-center w-full`} ref={parent}>
 			<div className="flex items-center w-full mb-2 relative">
 				<Dismissable
 					onSelect={onSelect}
@@ -76,7 +83,7 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 					onDismiss={onDismiss}
 					className={`border border-white text-white w-full rounded py-2 px-4 flex justify-between hover:bg-white hover:text-primary ${
 						selected && "bg-white text-primary"
-					} ease-in-out duration-100`}
+					}`}
 				>
 					<div className="flex items-center flex-1 truncate">
 						{icon}
@@ -85,49 +92,47 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 					<p>${transaction.amount}</p>
 				</Dismissable>
 			</div>
-			<div className={`${selected ? "h-10" : "h-0"} items-center ease-in-out duration-200`}>
-				<div
-					className={`flex right-0 top-full rounded mb-2 ${
-						selected ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-					} ease-in-out duration-100`}
-				>
-					<Link
-						href={{
-							pathname: "/edit",
-							query: {
-								id: transaction.id,
-							},
-						}}
-						passHref
-					>
-						<IconButton variant="text" className={`h-full ml-2`}>
-							<FiEdit className="w-4 h-4" />
+			{selected && (
+				<div className={`items-center`}>
+					<div className={`flex right-0 top-full rounded mb-2`}>
+						<Link
+							href={{
+								pathname: "/edit",
+								query: {
+									id: transaction.id,
+								},
+							}}
+							passHref
+						>
+							<IconButton variant="text" className={`h-full ml-2`}>
+								<FiEdit className="w-4 h-4" />
+							</IconButton>
+						</Link>
+						<IconButton
+							variant="text"
+							className={`h-full ml-2`}
+							onClick={() => {
+								toast.promise(
+									deleteTransaction
+										.mutateAsync({
+											id: transaction.id,
+										})
+										.then(() => {
+											refetch();
+										}),
+									{
+										loading: "Deleting...",
+										success: "Transaction deleted!",
+										error: "Error deleting transaction!",
+									}
+								);
+							}}
+						>
+							<FiTrash className="w-4 h-4" />
 						</IconButton>
-					</Link>
-					<IconButton
-						variant="text"
-						className={`h-full ml-2`}
-						onClick={() => {
-							toast.promise(
-								deleteTransaction
-									.mutateAsync({
-										id: transaction.id,
-									})
-									.then(() => {
-										refetch();
-									}),
-								{
-									loading: "Deleting...",
-									success: "Transaction deleted!",
-									error: "Error deleting transaction!",
-								}
-							);
-						}}
-					>
-						<FiTrash className="w-4 h-4" />
-					</IconButton>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };
