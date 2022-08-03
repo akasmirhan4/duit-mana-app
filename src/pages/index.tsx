@@ -9,6 +9,7 @@ import { trpc } from "utils/trpc";
 import { IconButton, TransactionContainer, TransactionSkeleton } from "components";
 import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -32,8 +33,9 @@ type PageProps = {
 };
 
 const Home: NextPage<PageProps> = (props) => {
-	const { data, status: dataStatus } = trpc.useQuery(["transaction.list"]);
+	const { data, status: dataStatus, refetch } = trpc.useQuery(["transaction.list"]);
 	const { status } = useSession();
+	const [selectedTransactionID, setSelectedTransactionID] = useState<number | null>(null);
 
 	return (
 		<>
@@ -64,7 +66,22 @@ const Home: NextPage<PageProps> = (props) => {
 						) : (
 							<>
 								{data.map((transaction, i) => (
-									<TransactionContainer key={i} transaction={transaction} />
+									<TransactionContainer
+										key={i}
+										transaction={transaction}
+										refetch={refetch}
+										onSelect={() => {
+											if (transaction.id === selectedTransactionID) {
+												setSelectedTransactionID(null);
+											} else {
+												setSelectedTransactionID(transaction.id);
+											}
+										}}
+										onDismiss={() => {
+											setSelectedTransactionID(null);
+										}}
+										selected={transaction.id === selectedTransactionID}
+									/>
 								))}
 							</>
 						)}

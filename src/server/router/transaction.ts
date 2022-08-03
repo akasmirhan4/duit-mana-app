@@ -18,14 +18,28 @@ export const transactionRouter = createRouter()
 				data: { ...input, userId: ctx.session.user.id },
 			});
 		},
-	}).query("list", {
+	})
+	.mutation("delete", {
+		input: z
+			.object({
+				id: z.number(),
+			})
+			.nullish(),
+		resolve({ ctx, input }) {
+			if (!input || !ctx.session?.user?.id) return;
+			return ctx.prisma.transactionLog.delete({
+				where: { id: input.id },
+			});
+		},
+	})
+	.query("list", {
 		resolve: async ({ ctx }) => {
 			if (!ctx.session?.user?.id) return;
 			return await ctx.prisma.transactionLog.findMany({
 				where: { userId: ctx.session.user.id },
 				orderBy: { createdAt: "desc" },
 			});
-		}
+		},
 	})
 	.middleware(async ({ ctx, next }) => {
 		// Any queries or mutations after this middleware will

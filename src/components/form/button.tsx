@@ -24,7 +24,7 @@ const Button: FC<Props> = ({ startIcon, endIcon, label, variant = "contained", .
 	return (
 		<button
 			{...props}
-			className={`${variantStyle} font-bold py-2 px-4 rounded inline-flex items-center ease-in duration-100 text-sm
+			className={`${variantStyle} font-bold py-2 px-4 rounded inline-flex items-center ease-in-out duration-100 text-sm
 			${props.className}`}
 		>
 			{startIcon && <span className="mr-2">{startIcon}</span>}
