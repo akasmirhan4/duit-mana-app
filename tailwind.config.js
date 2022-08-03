@@ -1,7 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
 
+const colors = {
+	primary: "#320541",
+	secondary: "#1B0536",
+};
+
 module.exports = {
+	mode: "jit",
+	purge: ["./public/**/*.html", "./src/**/*.{js,jsx,ts,tsx}"],
 	content: ["./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
@@ -11,6 +18,7 @@ module.exports = {
 			fontFamily: {
 				sans: ["Poppins", "sans-serif"],
 			},
+			colors,
 		},
 	},
 	plugins: [
@@ -23,7 +31,7 @@ module.exports = {
 					"-ms-overflow-style": "none",
 					"scrollbar-width": "none",
 				},
-				".custom-scrollbar":{
+				".custom-scrollbar": {
 					"scrollbar-width": "auto",
 					"scrollbar-color": "#FFFFFF20 transparent",
 				},

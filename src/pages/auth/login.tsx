@@ -32,7 +32,7 @@ const Login: NextPage = () => {
 				<link rel="icon" href="/images/icon.png" />
 			</Head>
 
-			<main className="bg-radial from-[#320541] to-[#1B0536] min-h-screen">
+			<main className="bg-radial from-primary to-secondary min-h-screen">
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center">

@@ -52,7 +52,7 @@ function Navbar() {
 									<div
 										className={`${
 											status === "loading" ? "animate-pulse" : ""
-										} border border-white p-2 rounded-full text-white hover:bg-white hover:text-[#1B0536]`}
+										} border border-white p-2 rounded-full text-white hover:bg-white hover:text-secondary`}
 									>
 										<FiUser className="w-4 h-4" />
 									</div>
@@ -69,7 +69,7 @@ function Navbar() {
 											return (
 												<li key={index}>
 													<Link href={item.href} passHref>
-														<div className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-[#1B0536] duration-100 ease-in-out">
+														<div className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-secondary duration-100 ease-in-out">
 															{item.icon}
 															<a className="ml-2">{item.label}</a>
 														</div>
@@ -79,7 +79,7 @@ function Navbar() {
 										}
 										return (
 											<li key={index} onClick={item.onClick}>
-												<div className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-[#1B0536] duration-100 ease-in-out">
+												<div className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-secondary duration-100 ease-in-out">
 													{item.icon}
 													<a className="ml-2">{item.label}</a>
 												</div>

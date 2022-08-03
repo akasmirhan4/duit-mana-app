@@ -74,8 +74,8 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 					onSelect={onSelect}
 					selected={selected}
 					onDismiss={onDismiss}
-					className={`border border-white text-white w-full rounded py-2 px-4 flex justify-between hover:bg-white hover:text-[#320541] ${
-						selected && "bg-white text-[#320541]"
+					className={`border border-white text-white w-full rounded py-2 px-4 flex justify-between hover:bg-white hover:text-primary ${
+						selected && "bg-white text-primary"
 					} ease-in-out duration-100`}
 				>
 					<div className="flex items-center flex-1 truncate">

@@ -10,14 +10,14 @@ const IconButton: FC<Props> = ({ children, variant = "contained", ...props }) =>
 	let variantStyle = "";
 	switch (variant) {
 		case "outlined":
-			variantStyle = "bg-transparent border border-white text-white hover:bg-white hover:text-[#320541]";
+			variantStyle = "bg-transparent border border-white text-white hover:bg-white hover:text-primary";
 			break;
 		case "text":
 			variantStyle = "border border-transparent bg-transparent text-white hover:border-white";
 			break;
 		case "contained":
 		default:
-			variantStyle = "border border-transparent bg-white text-[#1B0536] hover:bg-transparent hover:text-white hover:border-white";
+			variantStyle = "border border-transparent bg-white text-secondary hover:bg-transparent hover:text-white hover:border-white";
 	}
 	return (
 		<button

@@ -1,3 +1,2 @@
-export { default as TextInput } from "./textInput";
-export { default as Button } from "./button";
-export { default as Navbar } from "./navbar";
+export { default as TextInput } from "./TextInput";
+export { default as Button } from "./Button";

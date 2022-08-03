@@ -2,16 +2,17 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Navbar } from "components/form";
+import { Button } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
 import { trpc } from "utils/trpc";
-import { IconButton, TransactionContainer, TransactionSkeleton } from "components";
+import { IconButton, Modal, Navbar, TransactionContainer, TransactionSkeleton } from "components";
 import { FiGithub, FiInstagram, FiPlusCircle } from "react-icons/fi";
 import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 import { TransactionLog } from "@prisma/client";
 import ScrollableContainer from "components/ScrollableContainer";
+import AddNewForm from "components/form/AddNewForm";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -38,6 +39,7 @@ const Home: NextPage<PageProps> = (props) => {
 	const { data: transactions, status: dataStatus, refetch } = trpc.useQuery(["transaction.list"]);
 	const { status } = useSession();
 	const [selectedTransactionID, setSelectedTransactionID] = useState<number | null>(null);
+	const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
 
 	const getTransactionGroupedByDate = useCallback(
 		() =>
@@ -60,7 +62,16 @@ const Home: NextPage<PageProps> = (props) => {
 				<link rel="icon" href="/images/icon.png" />
 			</Head>
 
-			<main className="bg-radial from-[#320541] to-[#1B0536] min-h-screen">
+			<main className="bg-radial from-primary to-secondary min-h-screen">
+				<Modal open={openAddTransactionModal} onClose={() => setOpenAddTransactionModal(false)}>
+					<AddNewForm
+						className="bg-secondary bg-opacity-75 border-white border shadow-md"
+						onSubmit={() => {
+							refetch();
+							setOpenAddTransactionModal(false);
+						}}
+					/>
+				</Modal>
 				<Navbar />
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
@@ -109,9 +120,14 @@ const Home: NextPage<PageProps> = (props) => {
 								})}
 							</ScrollableContainer>
 						)}
-						<Link href="/add-new" passHref>
-							<Button className="w-full mt-4" variant="outlined" startIcon={<FiPlusCircle className="w-4 h-4" />} label="Add Transaction" />
-						</Link>
+						<Button
+							className="w-full mt-4"
+							variant="outlined"
+							startIcon={<FiPlusCircle className="w-4 h-4" />}
+							label="Add Transaction"
+							onClick={() => setOpenAddTransactionModal(true)}
+							color="white"
+						/>
 					</div>
 					<div className="flex flex-col justify-center items-center">
 						<div className="flex mb-1 justify-center w-full">

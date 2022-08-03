@@ -1,28 +1,29 @@
 import React, { FC } from "react";
 
 type Props = {
+	color?: string;
 	label?: string;
 	error?: string;
 	variant?: "contained" | "outlined";
 	startAdornment?: string;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
-const TextInput: FC<Props> = ({ label, error, startAdornment, variant = "contained", ...props }) => {
+const TextInput: FC<Props> = ({ label, error, startAdornment, variant = "contained", color, ...props }) => {
 	let variantStyle = "";
 
 	switch (variant) {
 		case "outlined":
-			variantStyle = "bg-transparent border border-white text-white";
+			variantStyle = `bg-transparent border border-${color ?? "white"} text-${color ?? "white"}`;
 			break;
 		case "contained":
 		default:
-			variantStyle = "bg-white text-[#1B0536]";
+			variantStyle = `bg-${color ?? "white"} text-${color ?? "primary"}`;
 			break;
 	}
 
 	return (
 		<div className="mb-4">
-			<label className="block text-white text-sm font-bold mb-2" htmlFor={label}>
+			<label className={`block text-[${color ?? "#FFFFFF"}] text-sm font-bold mb-2`} htmlFor={label}>
 				{label || "Empty label 🤷‍♂️"}
 			</label>
 			<div className="relative">
