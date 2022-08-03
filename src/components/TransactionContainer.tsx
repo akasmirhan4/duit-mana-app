@@ -88,52 +88,60 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 	}
 
 	return (
-		<div className="flex items-center w-full mb-2 relative">
-			<button
-				ref={transactionRef}
-				className={`border border-white text-white w-full rounded py-2 px-4 flex justify-between hover:bg-white hover:text-[#320541] ${
-					selected && "bg-white text-[#320541]"
-				} ease-in-out duration-100`}
-				onClick={onSelect}
-			>
-				<div className="flex items-center flex-1 truncate">
-					{icon}
-					<p className="mx-2 flex-1 truncate text-left">{transaction.description}</p>
+		<div className="flex flex-col items-center w-full">
+			<div className="flex items-center w-full mb-2 relative">
+				<button
+					ref={transactionRef}
+					className={`border border-white text-white w-full rounded py-2 px-4 flex justify-between hover:bg-white hover:text-[#320541] ${
+						selected && "bg-white text-[#320541]"
+					} ease-in-out duration-100`}
+					onClick={onSelect}
+				>
+					<div className="flex items-center flex-1 truncate">
+						{icon}
+						<p className="mx-2 flex-1 truncate text-left">{transaction.description}</p>
+					</div>
+					<p>${transaction.amount}</p>
+				</button>
+			</div>
+			<div className={`${selected ? "h-10" : "h-0"} items-center ease-in-out duration-200`}>
+				<div
+					className={`flex right-0 top-full rounded mb-2 ${
+						selected ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+					} ease-in-out duration-100`}
+				>
+					<IconButton
+						variant="text"
+						className={`h-full ml-2`}
+						onClick={() => {
+							toast("Still making it. Hold on tight! 🤗");
+						}}
+					>
+						<FiEdit className="w-4 h-4" />
+					</IconButton>
+					<IconButton
+						variant="text"
+						className={`h-full ml-2`}
+						onClick={() => {
+							toast.promise(
+								deleteTransaction
+									.mutateAsync({
+										id: transaction.id,
+									})
+									.then(() => {
+										refetch();
+									}),
+								{
+									loading: "Deleting...",
+									success: "Transaction deleted!",
+									error: "Error deleting transaction!",
+								}
+							);
+						}}
+					>
+						<FiTrash className="w-4 h-4" />
+					</IconButton>
 				</div>
-				<p>${transaction.amount}</p>
-			</button>
-			<div className={`flex absolute left-full ${selected ? "opacity-100  pointer-events-auto" : "opacity-0 pointer-events-none"}  ease-in-out duration-200`}>
-				<IconButton
-					variant="text"
-					className={`h-full ml-2`}
-					onClick={() => {
-						toast("Still making it. Hold on tight! 🤗");
-					}}
-				>
-					<FiEdit className="w-4 h-4" />
-				</IconButton>
-				<IconButton
-					variant="text"
-					className={`h-full ml-2`}
-					onClick={() => {
-						toast.promise(
-							deleteTransaction
-								.mutateAsync({
-									id: transaction.id,
-								})
-								.then(() => {
-									refetch();
-								}),
-							{
-								loading: "Deleting...",
-								success: "Transaction deleted!",
-								error: "Error deleting transaction!",
-							}
-						);
-					}}
-				>
-					<FiTrash className="w-4 h-4" />
-				</IconButton>
 			</div>
 		</div>
 	);
