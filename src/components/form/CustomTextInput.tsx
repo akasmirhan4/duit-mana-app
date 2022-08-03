@@ -8,7 +8,7 @@ type Props = {
 	startAdornment?: string;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
-const TextInput: FC<Props> = ({ label, error, startAdornment, variant = "contained", color, ...props }) => {
+const CustomTextInput: FC<Props> = ({ label, error, startAdornment, variant = "contained", color, ...props }) => {
 	let variantStyle = "";
 
 	switch (variant) {
@@ -45,4 +45,4 @@ const TextInput: FC<Props> = ({ label, error, startAdornment, variant = "contain
 	);
 };
 
-export default TextInput;
+export default CustomTextInput;

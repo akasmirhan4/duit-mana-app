@@ -2,7 +2,6 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "components/form";
 import { getAuthSession } from "server/common/get-server-session";
 import { Session } from "next-auth";
 import { trpc } from "utils/trpc";
@@ -15,6 +14,7 @@ import ScrollableContainer from "components/ScrollableContainer";
 import AddNewForm from "components/form/AddNewForm";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import EditForm from "components/form/EditForm";
+import { CustomButton } from "components/form";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -138,7 +138,7 @@ const Home: NextPage<PageProps> = (props) => {
 								})}
 							</ScrollableContainer>
 						)}
-						<Button
+						<CustomButton
 							className="w-full mt-4"
 							variant="outlined"
 							startIcon={<FiPlusCircle className="w-4 h-4" />}

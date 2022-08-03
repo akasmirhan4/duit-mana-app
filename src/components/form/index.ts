@@ -1,2 +1,2 @@
-export { default as TextInput } from "./TextInput";
-export { default as Button } from "./Button";
+export { default as CustomTextInput } from "./CustomTextInput";
+export { default as CustomButton } from "./CustomButton";

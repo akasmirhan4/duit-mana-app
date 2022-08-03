@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { colors, getColor } from "styles/theme";
 
 type Props = {
 	label?: string;
@@ -9,7 +8,7 @@ type Props = {
 	variant?: "contained" | "outlined" | "text";
 } & React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 
-const Button: FC<Props> = ({ startIcon, endIcon, label, color = "white", variant = "contained", ...props }) => {
+const CustomButton: FC<Props> = ({ startIcon, endIcon, label, color = "white", variant = "contained", ...props }) => {
 	//TODO: startIcon endIcon set starting size of icon
 	let variantStyle = "";
 	switch (variant) {
@@ -36,4 +35,4 @@ const Button: FC<Props> = ({ startIcon, endIcon, label, color = "white", variant
 	);
 };
 
-export default Button;
+export default CustomButton;

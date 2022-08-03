@@ -5,8 +5,8 @@ import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
 import { FiChevronDown, FiChevronUp, FiRotateCw, FiSend } from "react-icons/fi";
 import { trpc } from "utils/trpc";
-import Button from "./Button";
-import TextInput from "./TextInput";
+import CustomButton from "./CustomButton";
+import CustomTextInput from "./CustomTextInput";
 
 type Props = {
 	transaction: TransactionLog | null;
@@ -49,7 +49,7 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 					</option>
 				))}
 			</select>
-			<TextInput
+			<CustomTextInput
 				label="Amount (BND)"
 				value={String(amount)}
 				onChange={(e) => {
@@ -65,13 +65,13 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 				startAdornment="$"
 				variant="outlined"
 			/>
-			<TextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" color="white" variant="outlined" />
+			<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" color="white" variant="outlined" />
 
 			{/* SHOW MORE */}
 
 			{showMore && (
 				<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
-					<TextInput
+					<CustomTextInput
 						value={date?.toLocaleDateString()}
 						onClick={() => {
 							setShowDateModal(true);
@@ -101,7 +101,7 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 				</Dismissable>
 			)}
 			<div className="flex justify-between">
-				<Button
+				<CustomButton
 					variant="outlined"
 					label="Update"
 					endIcon={<FiRotateCw className="w-4 h-4" />}
@@ -140,7 +140,7 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 					}}
 					disabled={updateTransaction.isLoading}
 				/>
-				<Button
+				<CustomButton
 					label={showMore ? "Simple" : "Details"}
 					onClick={() => setShowMore(!showMore)}
 					variant="text"
