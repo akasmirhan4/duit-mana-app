@@ -25,18 +25,18 @@ module.exports = {
 				},
 				".custom-scrollbar":{
 					"scrollbar-width": "auto",
-					"scrollbar-color": "#1D0637 transparent",
+					"scrollbar-color": "#FFFFFF20 transparent",
 				},
 				".custom-scrollbar::-webkit-scrollbar": {
-					width: "8px",
+					width: "4px",
 				},
 				".custom-scrollbar::-webkit-scrollbar-track": {
 					background: "transparent",
 				},
 				".custom-scrollbar::-webkit-scrollbar-thumb": {
-					"background-color": "#1D0637",
+					"background-color": "#FFFFFF20",
 					"border-radius": "10px",
-					border: "3px solid transparent",
+					border: "3px #FFFFF transparent",
 				},
 			});
 		}),
