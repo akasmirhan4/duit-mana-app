@@ -10,6 +10,7 @@ export const transactionRouter = createRouter()
 				category: z.nativeEnum(TransactionCategory),
 				amount: z.number().default(0),
 				description: z.string(),
+				date: z.date().optional(),
 			})
 			.nullish(),
 		resolve({ ctx, input }) {
@@ -29,6 +30,36 @@ export const transactionRouter = createRouter()
 			if (!input || !ctx.session?.user?.id) return;
 			return ctx.prisma.transactionLog.delete({
 				where: { id: input.id },
+			});
+		},
+	})
+	.mutation("update", {
+		input: z
+			.object({
+				id: z.number(),
+				category: z.nativeEnum(TransactionCategory),
+				amount: z.number(),
+				description: z.string(),
+				date: z.date().optional(),
+			}),
+		resolve({ ctx, input }) {
+			if (!input || !ctx.session?.user?.id) return;
+			return ctx.prisma.transactionLog.update({
+				where: { id: input.id },
+				data: { ...input},
+			});
+		}
+	})
+	.query("get", {
+		input: z
+			.object({
+				id: z.number(),
+			})
+			.nullish(),
+		resolve({ ctx, input }) {
+			if (!input || !ctx.session?.user?.id) return;
+			return ctx.prisma.transactionLog.findFirst({
+				where: { id: input.id, userId: ctx.session.user.id },
 			});
 		},
 	})

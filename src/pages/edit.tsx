@@ -5,7 +5,7 @@ import { Button, TextInput } from "components/form";
 import { Session } from "next-auth";
 import { getAuthSession } from "server/common/get-server-session";
 import { trpc } from "utils/trpc";
-import { TransactionCategory } from "@prisma/client";
+import { PrismaClient, TransactionCategory, TransactionLog } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { FiArrowLeft, FiChevronDown, FiChevronUp, FiSend } from "react-icons/fi";
@@ -14,43 +14,82 @@ import { DayPicker } from "react-day-picker";
 import { Dismissable } from "components";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+	const transactionID = Number(ctx.query.id);
 	const session = await getAuthSession(ctx);
-	if (!session) {
+	if (!transactionID) {
 		return {
 			redirect: {
-				destination: "/auth/login",
+				destination: "/?error=missing-transaction-id",
+				statusCode: 302,
+			},
+		};
+	}
+	if (isNaN(transactionID)) {
+		return {
+			redirect: {
+				destination: "/?error=invalid-transaction-id",
+				statusCode: 302,
+			},
+		};
+	}
+	if (!session?.user) {
+		return {
+			redirect: {
+				destination: "/auth/login/?error=login-required",
 				statusCode: 302,
 			},
 		};
 	}
 
-	return {
-		props: { ...session.user },
-	};
+	const prisma = new PrismaClient();
+
+	const transaction = await prisma.transactionLog.findFirst({
+		where: {
+			id: transactionID,
+			userId: session.user.id,
+		},
+	});
+
+	if (!transaction) {
+		return {
+			redirect: {
+				destination: "/?error=transaction-not-found",
+				statusCode: 302,
+			},
+		};
+	} else {
+		return {
+			props: { ...session.user, transaction },
+		};
+	}
 };
 
-const AddNew: NextPage<Session["user"]> = (props) => {
-	const [category, setCategory] = useState<TransactionCategory>(TransactionCategory.GENERAL);
-	const [amount, setAmount] = useState<number | null>();
-	const [description, setDescription] = useState("");
-	const [showDateModal, setShowDateModal] = useState(false);
-	const [date, setDate] = useState<Date>(new Date());
-	const [showMore, setShowMore] = useState(false);
+type PageProps = {
+	transaction?: TransactionLog;
+} & Session["user"];
 
-	const addNewTransaction = trpc.useMutation(["transaction.add"]);
+const Edit: NextPage<PageProps> = ({ transaction }) => {
+	const [category, setCategory] = useState<TransactionCategory>(transaction?.category ?? TransactionCategory.GENERAL);
+	const [amount, setAmount] = useState<number | null>(transaction?.amount ?? null);
+	const [description, setDescription] = useState(transaction?.description ?? "");
+	const [date, setDate] = useState<Date | null>(transaction?.date ?? null);
+	const [showMore, setShowMore] = useState(false);
+	const [showDateModal, setShowDateModal] = useState(false);
+
+	const updateTransaction = trpc.useMutation(["transaction.update"]);
 
 	const router = useRouter();
 
 	useEffect(() => {
-		if (addNewTransaction.isSuccess) {
+		if (updateTransaction.isSuccess) {
 			router.push({
 				pathname: "/",
 				query: {
-					success: true,
+					success: "transaction-updated",
 				},
 			});
 		}
-	}, [addNewTransaction.isSuccess]);
+	}, [updateTransaction.isSuccess]);
 
 	return (
 		<>
@@ -123,7 +162,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 										<DayPicker
 											className="bg-[#331536] border border-white text-white rounded px-6 pt-4 pb-8"
 											mode="single"
-											selected={date}
+											selected={date ?? new Date()}
 											onSelect={(date) => {
 												setShowDateModal(false);
 												if (date) setDate(date);
@@ -139,21 +178,22 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 									label="Send"
 									endIcon={<FiSend className="w-4 h-4" />}
 									onClick={() => {
-										toast.promise(
-											addNewTransaction.mutateAsync({
-												amount: amount || 0,
+										transaction?.id && toast.promise(
+											updateTransaction.mutateAsync({
+												id: transaction.id,
+												amount: amount ?? 0,
 												category,
 												description,
-												date
+												date: date ?? new Date(),
 											}),
 											{
-												loading: "Adding...",
-												success: "Transaction added!",
-												error: "Error adding transaction!",
+												loading: "Updating...",
+												success: "Transaction updated!",
+												error: "Error updating transaction!",
 											}
 										);
 									}}
-									disabled={addNewTransaction.isLoading}
+									disabled={updateTransaction.isLoading}
 								/>
 								<Button
 									label={showMore ? "Simple" : "Details"}
@@ -163,7 +203,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								/>
 							</div>
 							{/* error message */}
-							{addNewTransaction.error && <div className="text-red-500 text-sm italic">{addNewTransaction.error.message}</div>}
+							{updateTransaction.error && <div className="text-red-500 text-sm italic">{updateTransaction.error.message}</div>}
 						</div>
 					</div>
 				</div>
@@ -172,4 +212,4 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 	);
 };
 
-export default AddNew;
+export default Edit;

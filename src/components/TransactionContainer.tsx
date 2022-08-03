@@ -8,6 +8,7 @@ import IconButton from "./IconButton";
 import { trpc } from "utils/trpc";
 import toast from "react-hot-toast";
 import Dismissable from "./Dismissable";
+import Link from "next/link";
 
 type Props = {
 	transaction: TransactionLog;
@@ -90,15 +91,19 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 						selected ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
 					} ease-in-out duration-100`}
 				>
-					<IconButton
-						variant="text"
-						className={`h-full ml-2`}
-						onClick={() => {
-							toast("Still making it. Hold on tight! 🤗");
+					<Link
+						href={{
+							pathname: "/edit",
+							query: {
+								id: transaction.id,
+							},
 						}}
+						passHref
 					>
-						<FiEdit className="w-4 h-4" />
-					</IconButton>
+						<IconButton variant="text" className={`h-full ml-2`}>
+							<FiEdit className="w-4 h-4" />
+						</IconButton>
+					</Link>
 					<IconButton
 						variant="text"
 						className={`h-full ml-2`}
