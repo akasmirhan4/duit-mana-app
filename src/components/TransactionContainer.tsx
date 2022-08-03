@@ -7,6 +7,7 @@ import { MdOutlineReceipt } from "react-icons/md";
 import IconButton from "./IconButton";
 import { trpc } from "utils/trpc";
 import toast from "react-hot-toast";
+import Dismissable from "./Dismissable";
 
 type Props = {
 	transaction: TransactionLog;
@@ -17,28 +18,6 @@ type Props = {
 };
 
 const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selected, onDismiss }) => {
-	const transactionRef = React.useRef<HTMLButtonElement>(null);
-	const [clickedOutside, setClickedOutside] = React.useState(false);
-
-	const handleOutsideClick = (e: MouseEvent) => {
-		if (transactionRef.current) {
-			setClickedOutside(!transactionRef.current.contains(e.target as Node));
-		}
-	};
-
-	useEffect(() => {
-		document.addEventListener("click", handleOutsideClick);
-		return () => {
-			document.removeEventListener("click", handleOutsideClick);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (selected && clickedOutside) {
-			onDismiss && onDismiss();
-		}
-	}, [clickedOutside]);
-
 	let icon;
 
 	const deleteTransaction = trpc.useMutation(["transaction.delete"]);
@@ -90,19 +69,20 @@ const TransactionContainer: FC<Props> = ({ transaction, refetch, onSelect, selec
 	return (
 		<div className="flex flex-col items-center w-full">
 			<div className="flex items-center w-full mb-2 relative">
-				<button
-					ref={transactionRef}
+				<Dismissable
+					onSelect={onSelect}
+					selected={selected}
+					onDismiss={onDismiss}
 					className={`border border-white text-white w-full rounded py-2 px-4 flex justify-between hover:bg-white hover:text-[#320541] ${
 						selected && "bg-white text-[#320541]"
 					} ease-in-out duration-100`}
-					onClick={onSelect}
 				>
 					<div className="flex items-center flex-1 truncate">
 						{icon}
 						<p className="mx-2 flex-1 truncate text-left">{transaction.description}</p>
 					</div>
 					<p>${transaction.amount}</p>
-				</button>
+				</Dismissable>
 			</div>
 			<div className={`${selected ? "h-10" : "h-0"} items-center ease-in-out duration-200`}>
 				<div
