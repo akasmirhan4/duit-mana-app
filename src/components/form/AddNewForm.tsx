@@ -4,7 +4,7 @@ import Dismissable from "components/Dismissable";
 import React, { FC, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
-import { FiChevronDown, FiChevronUp, FiSend } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiSend, FiTag } from "react-icons/fi";
 import { trpc } from "utils/trpc";
 import CustomButton from "./CustomButton";
 import CustomTextInput from "./CustomTextInput";
@@ -96,12 +96,37 @@ const AddNewForm: FC<Props> = ({ onSubmit, ...props }) => {
 				</div>
 			)}
 			<div className="flex justify-between">
-				<CustomButton
-					variant="outlined"
-					label="Send"
-					endIcon={<FiSend className="w-4 h-4" />}
-					onClick={() => {
-						if (!!category) {
+				{!category ? (
+					<CustomButton
+						variant="outlined"
+						label="Classify"
+						endIcon={<FiTag className="w-4 h-4" />}
+						className="mr-2"
+						disabled={!description}
+						onClick={() =>
+							toast.promise(
+								getCategory
+									.mutateAsync({
+										description,
+									})
+									.then((category) => {
+										setCategory(category ?? "");
+									}),
+								{
+									loading: "Getting category...",
+									success: "Category found!",
+									error: (error) => `${error}`,
+								}
+							)
+						}
+					/>
+				) : (
+					<CustomButton
+						variant="outlined"
+						label="Send"
+						endIcon={<FiSend className="w-4 h-4" />}
+						className="mr-2"
+						onClick={() =>
 							toast.promise(
 								addNewTransaction
 									.mutateAsync({
@@ -129,28 +154,12 @@ const AddNewForm: FC<Props> = ({ onSubmit, ...props }) => {
 									success: "Transaction added!",
 									error: "Error adding transaction!",
 								}
-							);
+							)
 						}
-						if (!!description) {
-							toast.promise(
-								getCategory
-									.mutateAsync({
-										description,
-									})
-									.then((category) => {
-										setCategory(category ?? "");
-									}),
-								{
-									loading: "Getting category...",
-									success: "Category found!",
-									error: (error) => `${error}`,
-								}
-							);
-						}
-					}}
-					color="red-200"
-					disabled={addNewTransaction.isLoading}
-				/>
+						color="red-200"
+						disabled={addNewTransaction.isLoading || !description || !amount || !category}
+					/>
+				)}
 				<CustomButton
 					label={showMore ? "Simple" : "Details"}
 					onClick={() => setShowMore(!showMore)}

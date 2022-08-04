@@ -13,7 +13,9 @@ const CustomButton: FC<Props> = ({ startIcon, endIcon, label, color = "white", v
 	let variantStyle = "";
 	switch (variant) {
 		case "outlined":
-			variantStyle = `bg-transparent border border-white text-white hover:bg-white hover:text-primary`;
+			variantStyle = `bg-transparent border border-white text-white hover:bg-white hover:text-primary ${
+				props.disabled && "opacity-20 hover:bg-transparent hover:text-white"
+			}`;
 			break;
 		case "text":
 			variantStyle = `border border-transparent bg-transparent text-white hover:border-white`;
