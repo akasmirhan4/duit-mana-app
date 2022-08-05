@@ -1,29 +1,34 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { TransactionCategory, TransactionLog } from "@prisma/client";
 import Dismissable from "components/Dismissable";
 import React, { FC, useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
-import { FiChevronDown, FiChevronUp, FiRotateCw, FiSend } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiRotateCw, FiSend, FiTag } from "react-icons/fi";
 import { trpc } from "utils/trpc";
 import CustomButton from "./CustomButton";
 import CustomTextInput from "./CustomTextInput";
 
-type Props = {
+export type EditFormProps = {
 	transaction: TransactionLog | null;
 	onSubmit?: (transaction: Partial<TransactionLog>) => void;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
-	const [category, setCategory] = useState<TransactionCategory>(transaction?.category ?? TransactionCategory.GENERAL);
+const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
+	const [category, setCategory] = useState<TransactionCategory | "">(transaction?.category ?? "");
 	const [amount, setAmount] = useState<number | null>(transaction?.amount ?? null);
 	const [description, setDescription] = useState(transaction?.description ?? "");
 	const [date, setDate] = useState<Date | null>(transaction?.date ?? null);
 	const [showMore, setShowMore] = useState(false);
 	const [showDateModal, setShowDateModal] = useState(false);
 
+	const [parent] = useAutoAnimate<HTMLDivElement>();
+
+	const getCategory = trpc.useMutation(["transaction.get-category"]);
+
 	useEffect(() => {
 		console.log(transaction);
-		setCategory(transaction?.category ?? TransactionCategory.GENERAL);
+		setCategory(transaction?.category ?? "");
 		setAmount(transaction?.amount ?? null);
 		setDescription(transaction?.description ?? "");
 		setDate(transaction?.date ?? null);
@@ -34,21 +39,7 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 	const updateTransaction = trpc.useMutation(["transaction.update"]);
 
 	return (
-		<div {...props} className={`${props.className} flex flex-col shadow-md rounded px-8 pt-6 pb-8 text-white`}>
-			<label className={`block text-sm font-bold mb-2`}>Category</label>
-			<select
-				className={`cursor-pointer bg-transparent outline-none appearance-none w-full border text-white border-white text-sm px-4 py-2 rounded mb-4`}
-				value={category}
-				onChange={(e) => setCategory(e.target.value as TransactionCategory)}
-			>
-				{/* TODO style the dropdown */}
-				{Object.values(TransactionCategory).map((category) => (
-					<option key={category} value={category} className="capitalize text-black">
-						{/* capitalize string */}
-						{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
-					</option>
-				))}
-			</select>
+		<div {...props} className={`${props.className} flex flex-col shadow-md rounded px-8 pt-6 pb-8 text-white`} ref={parent}>
 			<CustomTextInput
 				label="Amount (BND)"
 				value={String(amount)}
@@ -70,44 +61,85 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 			{/* SHOW MORE */}
 
 			{showMore && (
-				<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
-					<CustomTextInput
-						value={date?.toLocaleDateString()}
-						onClick={() => {
-							setShowDateModal(!showDateModal);
-						}}
-						readOnly
-						label="Date"
-						type="text"
-						variant="outlined"
-						className="cursor-pointer"
-					/>
-					<div
-						className={`${
-							showDateModal ? "visible" : "invisible"
-						} flex justify-center items-center absolute mb-2 left-0 right-0 bottom-full duration-100 ease-in-out`}
+				<div>
+					<label className={`block text-sm font-bold mb-2`}>Category</label>
+					<select
+						className={`cursor-pointer bg-transparent outline-none appearance-none w-full border text-white border-white text-sm px-4 py-2 rounded mb-4`}
+						value={category ?? ""}
+						onChange={(e) => setCategory(e.target.value as TransactionCategory)}
 					>
-						<DayPicker
-							className="bg-[#331536] border border-white text-white rounded px-6 pt-4 pb-8"
-							mode="single"
-							selected={date ?? new Date()}
-							onSelect={(date) => {
-								setShowDateModal(false);
-								if (date) setDate(date);
+						{/* TODO style the dropdown */}
+						{["", ...Object.values(TransactionCategory)].map((category) => (
+							<option key={category} value={category} className="capitalize text-black">
+								{/* capitalize string */}
+								{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
+							</option>
+						))}
+					</select>
+					<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
+						<CustomTextInput
+							value={date?.toLocaleDateString()}
+							onClick={() => {
+								setShowDateModal(!showDateModal);
 							}}
-							showOutsideDays
+							readOnly
+							label="Date"
+							type="text"
+							variant="outlined"
+							className="cursor-pointer"
 						/>
-					</div>
-				</Dismissable>
+						<div
+							className={`${
+								showDateModal ? "visible" : "invisible"
+							} flex justify-center items-center absolute mb-2 left-0 right-0 bottom-full duration-100 ease-in-out`}
+						>
+							<DayPicker
+								className="bg-[#331536] border border-white text-white rounded px-6 pt-4 pb-8"
+								mode="single"
+								selected={date ?? new Date()}
+								onSelect={(date) => {
+									setShowDateModal(false);
+									if (date) setDate(date);
+								}}
+								showOutsideDays
+							/>
+						</div>
+					</Dismissable>
+				</div>
 			)}
 			<div className="flex justify-between">
-				<CustomButton
-					variant="outlined"
-					label="Update"
-					className="mr-2"
-					endIcon={<FiRotateCw className="w-4 h-4" />}
-					onClick={() => {
-						transaction?.id &&
+				{!category ? (
+					<CustomButton
+						variant="outlined"
+						label="Classify"
+						endIcon={<FiTag className="w-4 h-4" />}
+						className="mr-2"
+						disabled={!description}
+						onClick={() =>
+							toast.promise(
+								getCategory
+									.mutateAsync({
+										description,
+									})
+									.then((category) => {
+										setCategory(category ?? "");
+									}),
+								{
+									loading: "Getting category...",
+									success: "Category found!",
+									error: (error) => `${error}`,
+								}
+							)
+						}
+					/>
+				) : (
+					<CustomButton
+						variant="outlined"
+						label="Send"
+						endIcon={<FiSend className="w-4 h-4" />}
+						className="mr-2"
+						onClick={() =>
+							transaction?.id &&
 							toast.promise(
 								updateTransaction
 									.mutateAsync({
@@ -137,10 +169,12 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 									success: "Transaction updated!",
 									error: "Error updating transaction!",
 								}
-							);
-					}}
-					disabled={updateTransaction.isLoading}
-				/>
+							)
+						}
+						color="red-200"
+						disabled={updateTransaction.isLoading || !description || !amount || !category}
+					/>
+				)}
 				<CustomButton
 					label={showMore ? "Simple" : "Details"}
 					onClick={() => setShowMore(!showMore)}

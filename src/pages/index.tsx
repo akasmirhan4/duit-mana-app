@@ -15,6 +15,8 @@ import AddNewForm from "components/form/AddNewForm";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import EditForm from "components/form/EditForm";
 import { CustomButton } from "components/form";
+import EditModal from "components/modal/EditModal";
+import AddModal from "components/modal/AddModal";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getAuthSession(ctx);
@@ -67,25 +69,23 @@ const Home: NextPage<PageProps> = (props) => {
 			</Head>
 
 			<main className="bg-radial from-primary to-secondary min-h-screen">
-				<Modal open={openEditTransactionModal} onClose={() => setOpenEditTransactionModal(false)}>
-					<EditForm
-						className="bg-secondary bg-opacity-75 border-white border shadow-md"
-						onSubmit={() => {
-							refetch();
-							setOpenEditTransactionModal(false);
-						}}
-						transaction={selectedTransaction}
-					/>
-				</Modal>
-				<Modal open={openAddTransactionModal} onClose={() => setOpenAddTransactionModal(false)}>
-					<AddNewForm
-						className="bg-secondary bg-opacity-75 border-white border shadow-md"
-						onSubmit={() => {
-							refetch();
-							setOpenAddTransactionModal(false);
-						}}
-					/>
-				</Modal>
+				<EditModal
+					open={openEditTransactionModal}
+					onClose={() => setOpenEditTransactionModal(false)}
+					onSubmit={() => {
+						refetch();
+						setOpenEditTransactionModal(false);
+					}}
+					transaction={selectedTransaction}
+				/>
+				<AddModal
+					open={openAddTransactionModal}
+					onClose={() => setOpenAddTransactionModal(false)}
+					onSubmit={() => {
+						refetch();
+						setOpenAddTransactionModal(false);
+					}}
+				/>
 				<Navbar />
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">

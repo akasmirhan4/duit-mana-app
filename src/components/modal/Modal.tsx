@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from "react";
 
-type Props = {
+export type ModalProps = {
 	open?: boolean;
 	onClose?: () => void;
 	containerProps?: React.HTMLAttributes<HTMLDivElement>;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const Modal: FC<Props> = ({ children, open, onClose, containerProps, ...props }) => {
+const Modal: FC<ModalProps> = ({ children, open, onClose, containerProps, ...props }) => {
 	const escFunction = (ev: KeyboardEvent) => {
 		if (ev.key === "Escape") {
 			open && onClose && onClose();

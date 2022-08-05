@@ -9,11 +9,11 @@ import { trpc } from "utils/trpc";
 import CustomButton from "./CustomButton";
 import CustomTextInput from "./CustomTextInput";
 
-type Props = {
+export type AddNewFormProps = {
 	onSubmit?: (transaction: Partial<TransactionLog>) => void;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-const AddNewForm: FC<Props> = ({ onSubmit, ...props }) => {
+const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 	const [category, setCategory] = useState<TransactionCategory | "">("");
 	const [amount, setAmount] = useState<number | null>();
 	const [description, setDescription] = useState("");
@@ -67,9 +67,7 @@ const AddNewForm: FC<Props> = ({ onSubmit, ...props }) => {
 					<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
 						<CustomTextInput
 							value={date?.toLocaleDateString()}
-							onClick={() => {
-								setShowDateModal(!showDateModal);
-							}}
+							onClick={() => setShowDateModal(!showDateModal)}
 							readOnly
 							label="Date"
 							type="text"
