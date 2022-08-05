@@ -34,7 +34,7 @@ const ConfirmCategoryModal: React.FC<Props> = ({ onSubmitCategory: onSubmit, ope
 						</option>
 					))}
 				</select>
-				<CustomTextInput id="confirm-description" value={description} label="Description" type="text" color="white" variant="outlined" readOnly />
+				<CustomTextInput value={description} label="Description" type="text" color="white" variant="outlined" readOnly />
 
 				<div className="flex justify-between">
 					<CustomButton
