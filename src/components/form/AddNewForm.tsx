@@ -7,6 +7,7 @@ import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
 import { FiChevronDown, FiChevronUp, FiSend, FiTag } from "react-icons/fi";
 import { trpc } from "utils/trpc";
+import CurrencyTextInput from "./CurrencyTextInput";
 import CustomButton from "./CustomButton";
 import CustomTextInput from "./CustomTextInput";
 
@@ -16,7 +17,7 @@ export type AddNewFormProps = {
 
 const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 	const [category, setCategory] = useState<TransactionCategory | "">("");
-	const [amount, setAmount] = useState<number | null>();
+	const [amount, setAmount] = useState<number>();
 	const [description, setDescription] = useState("");
 	const [showDateModal, setShowDateModal] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
@@ -40,25 +41,24 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 				description={description}
 				open={openConfirmCategoryModal}
 			/>
-			<CustomTextInput
+			<CurrencyTextInput
 				label="Amount (BND)"
 				id="add-form-amount"
-				value={String(amount)}
-				onChange={(e) => {
-					const value = e.target.value;
-					if (!value) {
-						setAmount(null);
-					} else {
-						setAmount(Number(Number(value).toFixed(2)));
-					}
-				}}
+				value={amount}
+				onValueChange={(value) => setAmount(value.floatValue)}
 				inputMode="decimal"
 				color="white"
-				type="number"
-				startAdornment="$"
 				variant="outlined"
 			/>
-			<CustomTextInput value={description} id="add-form-description" onChange={(e) => setDescription(e.target.value)} label="Description" type="text" color="white" variant="outlined" />
+			<CustomTextInput
+				value={description}
+				id="add-form-description"
+				onChange={(e) => setDescription(e.target.value)}
+				label="Description"
+				type="text"
+				color="white"
+				variant="outlined"
+			/>
 
 			{/* SHOW MORE */}
 
@@ -136,7 +136,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 						label="Send"
 						endIcon={<FiSend className="w-4 h-4" />}
 						className="mr-2"
-						onClick={() =>
+						onClick={() => {
 							toast.promise(
 								addNewTransaction
 									.mutateAsync({
@@ -153,7 +153,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 												description,
 												date,
 											});
-										setAmount(null);
+										setAmount(undefined);
 										setDescription("");
 										setDate(new Date());
 										setShowDateModal(false);
@@ -164,8 +164,8 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 									success: "Transaction added!",
 									error: "Error adding transaction!",
 								}
-							)
-						}
+							);
+						}}
 						color="red-200"
 						disabled={addNewTransaction.isLoading || !description || !amount || !category}
 					/>

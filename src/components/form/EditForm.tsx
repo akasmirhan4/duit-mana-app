@@ -5,8 +5,9 @@ import Modal from "components/modal/Modal";
 import React, { FC, useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
-import { FiChevronDown, FiChevronUp, FiRotateCw, FiSend, FiTag } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiSend, FiTag } from "react-icons/fi";
 import { trpc } from "utils/trpc";
+import CurrencyTextInput from "./CurrencyTextInput";
 import CustomButton from "./CustomButton";
 import CustomTextInput from "./CustomTextInput";
 
@@ -16,8 +17,9 @@ export type EditFormProps = {
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
+	const [transactionID, setTransactionID] = useState(transaction?.id || undefined);
 	const [category, setCategory] = useState<TransactionCategory | "">(transaction?.category ?? "");
-	const [amount, setAmount] = useState<number | null>(transaction?.amount ?? null);
+	const [amount, setAmount] = useState<number | undefined>(transaction?.amount ?? undefined);
 	const [description, setDescription] = useState(transaction?.description ?? "");
 	const [date, setDate] = useState<Date | null>(transaction?.date ?? null);
 	const [showMore, setShowMore] = useState(false);
@@ -30,10 +32,12 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 
 	useEffect(() => {
 		if (!transaction) return;
-		setCategory(transaction?.category ?? "");
-		setAmount(transaction?.amount ?? null);
-		setDescription(transaction?.description ?? "");
-		setDate(transaction?.date ?? null);
+		console.log("transaction", transaction);
+		setTransactionID(transaction.id);
+		setCategory(transaction.category ?? "");
+		setAmount(transaction.amount ?? null);
+		setDescription(transaction.description ?? "");
+		setDate(transaction.date ?? null);
 		setShowMore(false);
 		setShowDateModal(false);
 	}, [transaction]);
@@ -51,23 +55,13 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 				description={description}
 				open={openConfirmCategoryModal}
 			/>
-			<CustomTextInput
+			<CurrencyTextInput
 				label="Amount (BND)"
-				id="edit-form-amount"
-				aria-labelledby="Edit Form Amount"
-				value={String(amount)}
-				onChange={(e) => {
-					const value = e.target.value;
-					if (!value) {
-						setAmount(null);
-					} else {
-						setAmount(Number(Number(value).toFixed(2)));
-					}
-				}}
+				id="add-form-amount"
+				value={amount}
+				onValueChange={(value) => setAmount(value.floatValue)}
 				inputMode="decimal"
 				color="white"
-				type="number"
-				startAdornment="$"
 				variant="outlined"
 			/>
 			<CustomTextInput
@@ -157,11 +151,10 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 						endIcon={<FiSend className="w-4 h-4" />}
 						className="mr-2"
 						onClick={() =>
-							transaction?.id &&
 							toast.promise(
 								updateTransaction
 									.mutateAsync({
-										id: transaction.id,
+										id: transactionID as number,
 										amount: amount ?? 0,
 										category,
 										description,
@@ -170,13 +163,13 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 									.then(() => {
 										onSubmit &&
 											onSubmit({
-												id: transaction.id,
+												id: transactionID as number,
 												amount: amount ?? 0,
 												category,
 												description,
 												date: date ?? new Date(),
 											});
-										setAmount(null);
+										setAmount(undefined);
 										setDescription("");
 										setDate(new Date());
 										setShowDateModal(false);
@@ -190,7 +183,7 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 							)
 						}
 						color="red-200"
-						disabled={updateTransaction.isLoading || !description || !amount || !category}
+						disabled={!transactionID || updateTransaction.isLoading || !description || !amount || !category}
 					/>
 				)}
 				<CustomButton
