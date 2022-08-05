@@ -72,10 +72,10 @@ function Navbar() {
 												return (
 													<li key={index}>
 														<Link href={item.href} passHref>
-															<div className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-secondary">
+															<a className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-secondary">
 																{item.icon}
-																<a className="ml-2">{item.label}</a>
-															</div>
+																<p className="ml-2">{item.label}</p>
+															</a>
 														</Link>
 													</li>
 												);
