@@ -43,7 +43,7 @@ const Home: NextPage<PageProps> = (props) => {
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
-						<h1 className="text-xl text-white">In the making process. Hang on tight! 🤗</h1>
+						<h1 className="text-xl text-center text-white">In the making process. Hang on tight! 🤗</h1>
 						<Link href="/" passHref>
 							<CustomButton startIcon={<FiChevronLeft />} label="Go Back" className="mt-8"/>
 						</Link>
