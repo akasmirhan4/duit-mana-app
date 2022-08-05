@@ -177,6 +177,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 									variant="outlined"
 									label="Update"
 									endIcon={<FiRefreshCw className="w-4 h-4" />}
+									className="mr-2"
 									onClick={() => {
 										transaction?.id &&
 											toast.promise(

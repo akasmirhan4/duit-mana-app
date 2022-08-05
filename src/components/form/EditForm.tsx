@@ -74,7 +74,7 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 					<CustomTextInput
 						value={date?.toLocaleDateString()}
 						onClick={() => {
-							setShowDateModal(true);
+							setShowDateModal(!showDateModal);
 						}}
 						readOnly
 						label="Date"
@@ -104,6 +104,7 @@ const EditForm: FC<Props> = ({ transaction, onSubmit, ...props }) => {
 				<CustomButton
 					variant="outlined"
 					label="Update"
+					className="mr-2"
 					endIcon={<FiRotateCw className="w-4 h-4" />}
 					onClick={() => {
 						transaction?.id &&

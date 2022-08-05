@@ -68,7 +68,7 @@ const AddNewForm: FC<Props> = ({ onSubmit, ...props }) => {
 						<CustomTextInput
 							value={date?.toLocaleDateString()}
 							onClick={() => {
-								setShowDateModal(true);
+								setShowDateModal(!showDateModal);
 							}}
 							readOnly
 							label="Date"
