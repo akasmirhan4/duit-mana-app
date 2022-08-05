@@ -29,7 +29,7 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 	const getCategory = trpc.useMutation(["transaction.get-category"]);
 
 	useEffect(() => {
-		console.log(transaction);
+		if (!transaction) return;
 		setCategory(transaction?.category ?? "");
 		setAmount(transaction?.amount ?? null);
 		setDescription(transaction?.description ?? "");
