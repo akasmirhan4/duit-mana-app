@@ -287,7 +287,6 @@ export const getColor = (color: string) => {
 		const base = color as keyof Colors;
 		return colors[base] as string;
 	}
-	console.log({ colors });
 	if (splits.length === 2) {
 		const base = splits[0] as keyof Colors;
 		const modifier = splits[1] as any;

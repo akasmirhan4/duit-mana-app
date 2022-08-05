@@ -78,7 +78,6 @@ export const transactionRouter = createRouter()
 		}),
 		resolve: async ({ ctx, input }) => {
 			if (!input || !ctx.session?.user?.id) return;
-			console.log({ input });
 			const transactionCategories = Object.values(TransactionCategory).join(", ");
 			const prompt = `This is the list of transaction categories: ${transactionCategories}\nDescription: ${input.description}\nCategory:`;
 			const response = await openai.createCompletion({

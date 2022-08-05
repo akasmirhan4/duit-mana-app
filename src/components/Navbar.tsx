@@ -84,7 +84,7 @@ function Navbar() {
 												<li key={index} onClick={item.onClick}>
 													<div className="flex items-center cursor-pointer py-2 px-4 text-sm text-white hover:bg-white dark:hover:text-secondary duration-100 ease-in-out">
 														{item.icon}
-														<a className="ml-2">{item.label}</a>
+														<p className="ml-2">{item.label}</p>
 													</div>
 												</li>
 											);
