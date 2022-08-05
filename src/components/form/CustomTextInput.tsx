@@ -22,7 +22,7 @@ const CustomTextInput: FC<Props> = ({ label, error, startAdornment, variant = "c
 	}
 
 	return (
-		<div className="mb-4">
+		<div className={`mb-4 ${props.readOnly && "cursor-pointer"} hover:brightness-75 duration-200 ease-in-out`}>
 			<label className={`block text-[${color ?? "#FFFFFF"}] text-sm font-bold mb-2`} htmlFor={label}>
 				{label || "Empty label 🤷‍♂️"}
 			</label>

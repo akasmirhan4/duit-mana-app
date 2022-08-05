@@ -1,6 +1,7 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { TransactionCategory, TransactionLog } from "@prisma/client";
-import Dismissable from "components/Dismissable";
+import ConfirmCategoryModal from "components/modal/ConfirmCategoryModal";
+import Modal from "components/modal/Modal";
 import React, { FC, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
@@ -21,6 +22,8 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 	const [date, setDate] = useState<Date>(new Date());
 	const [showMore, setShowMore] = useState(false);
 
+	const [openConfirmCategoryModal, setOpenConfirmCategoryModal] = useState(false);
+
 	const addNewTransaction = trpc.useMutation(["transaction.add"]);
 	const getCategory = trpc.useMutation(["transaction.get-category"]);
 
@@ -28,6 +31,15 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 
 	return (
 		<div {...props} className={`${props.className} flex flex-col shadow-md rounded px-8 pt-6 pb-8 text-white`} ref={parent}>
+			<ConfirmCategoryModal
+				onSubmitCategory={(category) => {
+					setCategory(category);
+					setOpenConfirmCategoryModal(false);
+				}}
+				category={category}
+				description={description}
+				open={openConfirmCategoryModal}
+			/>
 			<CustomTextInput
 				label="Amount (BND)"
 				value={String(amount)}
@@ -50,47 +62,43 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 
 			{showMore && (
 				<div>
-					<label className={`block text-sm font-bold mb-2`}>Category</label>
-					<select
-						className={`cursor-pointer bg-transparent outline-none appearance-none w-full border text-white border-white text-sm px-4 py-2 rounded mb-4`}
-						value={category ?? ""}
-						onChange={(e) => setCategory(e.target.value as TransactionCategory)}
-					>
-						{/* TODO style the dropdown */}
-						{["", ...Object.values(TransactionCategory)].map((category) => (
-							<option key={category} value={category} className="capitalize text-black">
-								{/* capitalize string */}
-								{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
-							</option>
-						))}
-					</select>
-					<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
-						<CustomTextInput
-							value={date?.toLocaleDateString()}
-							onClick={() => setShowDateModal(!showDateModal)}
-							readOnly
-							label="Date"
-							type="text"
-							variant="outlined"
-							className="cursor-pointer"
-						/>
-						<div
-							className={`${
-								showDateModal ? "visible" : "invisible"
-							} flex justify-center items-center absolute mb-2 left-0 right-0 bottom-full duration-100 ease-in-out`}
+					<div className="hover:brightness-75 duration-200 ease-in-out">
+						<label className={`block text-sm font-bold mb-2`}>Category</label>
+						<select
+							className={`cursor-pointer bg-transparent outline-none appearance-none w-full border text-white border-white text-sm px-4 py-2 rounded mb-4`}
+							value={category ?? ""}
+							onChange={(e) => setCategory(e.target.value as TransactionCategory)}
 						>
-							<DayPicker
-								className="bg-[#331536] border border-white text-white rounded px-6 pt-4 pb-8"
-								mode="single"
-								selected={date}
-								onSelect={(date) => {
-									setShowDateModal(false);
-									if (date) setDate(date);
-								}}
-								showOutsideDays
-							/>
-						</div>
-					</Dismissable>
+							{/* TODO style the dropdown */}
+							{["", ...Object.values(TransactionCategory)].map((category) => (
+								<option key={category} value={category} className="capitalize text-black">
+									{/* capitalize string */}
+									{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
+								</option>
+							))}
+						</select>
+					</div>
+					<CustomTextInput
+						value={date?.toLocaleDateString()}
+						onClick={() => setShowDateModal(!showDateModal)}
+						readOnly
+						label="Date"
+						type="text"
+						variant="outlined"
+						className="cursor-pointer"
+					/>
+					<Modal open={showDateModal} onClose={() => setShowDateModal(false)}>
+						<DayPicker
+							className="bg-[#331536] border border-white text-white rounded px-6 pt-4 pb-8"
+							mode="single"
+							selected={date}
+							onSelect={(date) => {
+								setShowDateModal(false);
+								if (date) setDate(date);
+							}}
+							showOutsideDays
+						/>
+					</Modal>
 				</div>
 			)}
 			<div className="flex justify-between">
@@ -108,6 +116,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 										description,
 									})
 									.then((category) => {
+										setOpenConfirmCategoryModal(true);
 										setCategory(category ?? "");
 									}),
 								{
