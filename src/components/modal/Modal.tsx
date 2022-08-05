@@ -29,11 +29,12 @@ const Modal: FC<ModalProps> = ({ children, open, onClose, containerProps, ...pro
 				className={`${
 					open ? "visible opacity-100" : "invisible opacity-0"
 				} absolute z-50 bg-black bg-opacity-90 flex items-center justify-center w-screen h-screen duration-200 ease-in-out left-0 top-0`}
-				onClick={() => {
+				onMouseDown={(e) => {
+					console.log(e);
 					onClose && onClose();
 				}}
 			>
-				<div {...props} className={`${props.className}`} onClick={(e) => e.stopPropagation()}>
+				<div {...props} className={`${props.className}`} onMouseDown={(e) => e.stopPropagation()}>
 					{children}
 				</div>
 			</div>
