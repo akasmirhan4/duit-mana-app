@@ -23,7 +23,7 @@ const CustomTextInput: FC<Props> = ({ label, error, startAdornment, variant = "c
 
 	return (
 		<div className={`mb-4 ${props.readOnly && "cursor-pointer"} hover:brightness-75 duration-200 ease-in-out`}>
-			<label className={`block text-[${color ?? "#FFFFFF"}] text-sm font-bold mb-2`} htmlFor={label}>
+			<label className={`block text-[${color ?? "#FFFFFF"}] text-sm font-bold mb-2`} htmlFor={props.id ?? label}>
 				{label || "Empty label 🤷‍♂️"}
 			</label>
 			<div className="relative">
@@ -37,8 +37,8 @@ const CustomTextInput: FC<Props> = ({ label, error, startAdornment, variant = "c
 					className={`${props.className} shadow appearance-none rounded w-full ${
 						!!startAdornment ? "pl-6" : "pl-3"
 					} py-2 pr-3 leading-tight focus:outline-none focus:shadow-outline text-sm ${variantStyle} ${!!error && "border-red-500"}`}
-					id={label}
 				/>
+				id={props.id ?? label}
 			</div>
 			{!!error && <p className="text-red-500 text-xs italic mt-2">{error}</p>}
 		</div>
