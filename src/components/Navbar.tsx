@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { FiLogOut, FiPieChart, FiSettings, FiUser } from "react-icons/fi";
 import autoAnimate from "@formkit/auto-animate";
+import Modal from "./modal/Modal";
 
 function Navbar() {
 	const { data, status } = useSession();
@@ -46,9 +47,9 @@ function Navbar() {
 				<div className="flex items-center justify-end">
 					<div className="flex flex-col flex-end w-full">
 						<div className="self-end relative" ref={parent}>
-							<Dismissable className="hover:brightness-150" onDismiss={() => setExpandMenu(false)} onSelect={() => setExpandMenu(true)} selected={expandMenu}>
+							<button onClick={() => setExpandMenu(!expandMenu)} className="rounded-full overflow-hidden flex hover:brightness-90">
 								{user?.image ? (
-									<Image src={user.image} width={32} height={32} className="rounded-full" alt="User Profile Image"/>
+									<Image src={user.image} width={32} height={32} alt="User Profile Image" />
 								) : (
 									<div
 										className={`${
@@ -58,9 +59,9 @@ function Navbar() {
 										<FiUser className="w-4 h-4" />
 									</div>
 								)}
-							</Dismissable>
-							{expandMenu && (
-								<div className={`absolute self-end right-0 mt-2 border border-white rounded dropdown-menu dropdown-menu-right`}>
+							</button>
+							<Modal className="hover:brightness-150" onClose={() => setExpandMenu(false)} open={expandMenu}>
+								<div className={`border border-white rounded dropdown-menu dropdown-menu-right`}>
 									<div className="py-3 px-4">
 										<span className="block text-sm text-gray-900 dark:text-white">{user?.name}</span>
 										<span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{user?.email}</span>
@@ -90,7 +91,7 @@ function Navbar() {
 										})}
 									</ul>
 								</div>
-							)}
+							</Modal>
 						</div>
 					</div>
 				</div>
