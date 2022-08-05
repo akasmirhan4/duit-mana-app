@@ -96,6 +96,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 										setAmount(Number(Number(value).toFixed(2)));
 									}
 								}}
+								inputMode="decimal"
 								type="number"
 								startAdornment="$"
 								variant="outlined"

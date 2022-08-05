@@ -52,6 +52,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 						setAmount(Number(Number(value).toFixed(2)));
 					}
 				}}
+				inputMode="decimal"
 				color="white"
 				type="number"
 				startAdornment="$"

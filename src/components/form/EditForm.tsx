@@ -64,6 +64,7 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 						setAmount(Number(Number(value).toFixed(2)));
 					}
 				}}
+				inputMode="decimal"
 				color="white"
 				type="number"
 				startAdornment="$"

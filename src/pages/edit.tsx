@@ -134,6 +134,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 										setAmount(Number(Number(value).toFixed(2)));
 									}
 								}}
+								inputMode="decimal"
 								type="number"
 								startAdornment="$"
 								variant="outlined"
