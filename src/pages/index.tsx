@@ -90,54 +90,58 @@ const Home: NextPage<PageProps> = (props) => {
 				<div className="animate-pulse bg-radial from-[#fff2002c] to-[#ffffff00] w-full h-screen absolute pointer-events-none" />
 				<div className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
 					<div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
-						{dataStatus === "loading" || status === "loading" ? (
-							<>
-								<TransactionSkeleton />
-								<TransactionSkeleton />
-								<TransactionSkeleton />
-							</>
-						) : !transactions || transactions.length <= 0 ? (
-							<>
-								<div className="animate-pulse">
-									<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
-								</div>
-								<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
-							</>
-						) : (
-							<ScrollableContainer className="flex flex-col w-full max-w-md h-[50vh]" ref={parent}>
-								{Array.from(getTransactionGroupedByDate() ?? []).map(([date, transactions]) => {
-									return (
-										<div key={date} className="flex flex-col justify-center w-full">
-											<h2 className="text-2xl font-semibold text-white text-left pb-4 pt-2">{date}</h2>
-											<div className="flex flex-col items-center justify-center w-full" ref={parent}>
-												{transactions.map((transaction, i) => (
-													<TransactionContainer
-														key={i}
-														transaction={transaction}
-														refetch={refetch}
-														onSelect={() => {
-															if (transaction.id === selectedTransaction?.id) {
-																setSelectedTransaction(null);
-															} else {
-																setSelectedTransaction(transaction);
-															}
-														}}
-														onDismiss={() => {
-															setSelectedTransaction(null);
-														}}
-														onEditClicked={(transaction) => {
-															setSelectedTransaction(transaction);
-															setOpenEditTransactionModal(true);
-														}}
-														selected={transaction.id === selectedTransaction?.id}
-													/>
-												))}
-											</div>
+						<ScrollableContainer className="flex flex-col w-full max-w-md h-[50vh]" ref={parent}>
+							<div className="flex flex-col w-full max-w-md h-full">
+								{dataStatus === "loading" || status === "loading" ? (
+									<>
+										<TransactionSkeleton />
+										<TransactionSkeleton />
+										<TransactionSkeleton />
+										<TransactionSkeleton />
+										<TransactionSkeleton />
+									</>
+								) : !transactions || transactions.length <= 0 ? (
+									<>
+										<div className="animate-pulse self-center">
+											<Image src="/images/question-mark.png" alt="Duit Mana?" width={200} height={200} />
 										</div>
-									);
-								})}
-							</ScrollableContainer>
-						)}
+										<h1 className="text-2xl font-semibold text-white text-center pb-4 pt-2">Duit Mana?</h1>
+									</>
+								) : (
+									Array.from(getTransactionGroupedByDate() ?? []).map(([date, transactions]) => {
+										return (
+											<div key={date} className="flex flex-col justify-center w-full">
+												<h2 className="text-2xl font-semibold text-white text-left pb-4 pt-2">{date}</h2>
+												<div className="flex flex-col items-center justify-center w-full" ref={parent}>
+													{transactions.map((transaction, i) => (
+														<TransactionContainer
+															key={i}
+															transaction={transaction}
+															refetch={refetch}
+															onSelect={() => {
+																if (transaction.id === selectedTransaction?.id) {
+																	setSelectedTransaction(null);
+																} else {
+																	setSelectedTransaction(transaction);
+																}
+															}}
+															onDismiss={() => {
+																setSelectedTransaction(null);
+															}}
+															onEditClicked={(transaction) => {
+																setSelectedTransaction(transaction);
+																setOpenEditTransactionModal(true);
+															}}
+															selected={transaction.id === selectedTransaction?.id}
+														/>
+													))}
+												</div>
+											</div>
+										);
+									})
+								)}
+							</div>
+						</ScrollableContainer>
 						<CustomButton
 							className="w-full mt-4"
 							variant="outlined"
