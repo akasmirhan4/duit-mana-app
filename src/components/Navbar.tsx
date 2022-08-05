@@ -48,7 +48,7 @@ function Navbar() {
 						<div className="self-end relative" ref={parent}>
 							<Dismissable className="hover:brightness-150" onDismiss={() => setExpandMenu(false)} onSelect={() => setExpandMenu(true)} selected={expandMenu}>
 								{user?.image ? (
-									<Image src={user.image} width={32} height={32} className="rounded-full" />
+									<Image src={user.image} width={32} height={32} className="rounded-full" alt="User Profile Image"/>
 								) : (
 									<div
 										className={`${

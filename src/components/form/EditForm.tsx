@@ -53,6 +53,7 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 			/>
 			<CustomTextInput
 				label="Amount (BND)"
+				id="edit-form-amount"
 				aria-labelledby="Edit Form Amount"
 				value={String(amount)}
 				onChange={(e) => {
@@ -68,7 +69,15 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 				startAdornment="$"
 				variant="outlined"
 			/>
-			<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" color="white" variant="outlined" />
+			<CustomTextInput
+				value={description}
+				id="edit-form-description"
+				onChange={(e) => setDescription(e.target.value)}
+				label="Description"
+				type="text"
+				color="white"
+				variant="outlined"
+			/>
 
 			{/* SHOW MORE */}
 
@@ -91,6 +100,7 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 						</select>
 					</div>
 					<CustomTextInput
+						id="edit-form-date"
 						value={date?.toLocaleDateString()}
 						onClick={() => setShowDateModal(!showDateModal)}
 						readOnly

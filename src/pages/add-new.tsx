@@ -85,6 +85,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 
 							<CustomTextInput
 								label="Amount (BND)"
+								id="add-amount"
 								aria-labelledby="Add Page Amount"
 								value={String(amount)}
 								onChange={(e) => {
@@ -99,13 +100,21 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 								startAdornment="$"
 								variant="outlined"
 							/>
-							<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
+							<CustomTextInput
+								id="add-description"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+								label="Description"
+								type="text"
+								variant="outlined"
+							/>
 
 							{/* SHOW MORE */}
 
 							{showMore && (
 								<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
 									<CustomTextInput
+										id="add-date"
 										value={date?.toLocaleDateString()}
 										onClick={() => {
 											setShowDateModal(true);
@@ -145,7 +154,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 												amount: amount || 0,
 												category,
 												description,
-												date
+												date,
 											}),
 											{
 												loading: "Adding...",

@@ -42,7 +42,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 			/>
 			<CustomTextInput
 				label="Amount (BND)"
-				aria-labelledby="Add Form Amount"
+				id="add-form-amount"
 				value={String(amount)}
 				onChange={(e) => {
 					const value = e.target.value;
@@ -57,7 +57,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 				startAdornment="$"
 				variant="outlined"
 			/>
-			<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" color="white" variant="outlined" />
+			<CustomTextInput value={description} id="add-form-description" onChange={(e) => setDescription(e.target.value)} label="Description" type="text" color="white" variant="outlined" />
 
 			{/* SHOW MORE */}
 
@@ -83,6 +83,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 						value={date?.toLocaleDateString()}
 						onClick={() => setShowDateModal(!showDateModal)}
 						readOnly
+						id="add-form-date"
 						label="Date"
 						type="text"
 						variant="outlined"

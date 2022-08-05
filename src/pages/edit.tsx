@@ -124,7 +124,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 
 							<CustomTextInput
 								label="Amount (BND)"
-								aria-labelledby="Edit Page Amount"
+								id="edit-amount"
 								value={String(amount)}
 								onChange={(e) => {
 									const value = e.target.value;
@@ -138,13 +138,21 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 								startAdornment="$"
 								variant="outlined"
 							/>
-							<CustomTextInput value={description} onChange={(e) => setDescription(e.target.value)} label="Description" type="text" variant="outlined" />
+							<CustomTextInput
+								id="edit-description"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+								label="Description"
+								type="text"
+								variant="outlined"
+							/>
 
 							{/* SHOW MORE */}
 
 							{showMore && (
 								<Dismissable className="relative" selected={showDateModal} onDismiss={() => setShowDateModal(false)}>
 									<CustomTextInput
+										id="edit-date"
 										value={date?.toLocaleDateString()}
 										onClick={() => {
 											setShowDateModal(true);
