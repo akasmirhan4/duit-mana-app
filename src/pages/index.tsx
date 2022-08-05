@@ -150,12 +150,12 @@ const Home: NextPage<PageProps> = (props) => {
 					<div className="flex flex-col justify-center items-center">
 						<div className="flex mb-1 justify-center w-full">
 							<a href="https://github.com/akasmirhan4/duit-mana-app" target="_blank" rel="noopener noreferrer">
-								<IconButton variant="outlined" className="mx-1">
+								<IconButton variant="outlined" className="mx-1" aria-label="Github link">
 									<FiGithub />
 								</IconButton>
 							</a>
 							<a href="https://www.instagram.com/akasmirhan/" target="_blank" rel="noopener noreferrer">
-								<IconButton variant="outlined" className="mx-1">
+								<IconButton variant="outlined" className="mx-1" aria-label="Instagram link">
 									<FiInstagram />
 								</IconButton>
 							</a>

@@ -85,6 +85,7 @@ const AddNew: NextPage<Session["user"]> = (props) => {
 
 							<CustomTextInput
 								label="Amount (BND)"
+								aria-labelledby="Add Page Amount"
 								value={String(amount)}
 								onChange={(e) => {
 									const value = e.target.value;

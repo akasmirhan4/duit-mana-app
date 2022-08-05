@@ -124,6 +124,7 @@ const Edit: NextPage<PageProps> = ({ transaction }) => {
 
 							<CustomTextInput
 								label="Amount (BND)"
+								aria-labelledby="Edit Page Amount"
 								value={String(amount)}
 								onChange={(e) => {
 									const value = e.target.value;

@@ -42,6 +42,7 @@ const AddNewForm: FC<AddNewFormProps> = ({ onSubmit, ...props }) => {
 			/>
 			<CustomTextInput
 				label="Amount (BND)"
+				aria-labelledby="Add Form Amount"
 				value={String(amount)}
 				onChange={(e) => {
 					const value = e.target.value;

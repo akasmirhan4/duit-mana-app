@@ -53,6 +53,7 @@ const EditForm: FC<EditFormProps> = ({ transaction, onSubmit, ...props }) => {
 			/>
 			<CustomTextInput
 				label="Amount (BND)"
+				aria-labelledby="Edit Form Amount"
 				value={String(amount)}
 				onChange={(e) => {
 					const value = e.target.value;
